@@ -6,4 +6,4 @@ dass das Format der Datenübertragung das selbe ist.
 
 Der "clusteranalyse_mit_kollisionsanalyse"-Code ist das eigentliche Programm.
 Die Performance ist mäßig, wird jedoch erheblich verbessert wenn man die Visualisierung deaktiviert und die Ergebnisse stattdessen durch die Konsole ausgibt.
-Wahrscheinlich muss man den Port anpassen (Standard ist COM4).
+Wahrscheinlich muss man den Port anpassen (Standard ist COM4) wenn man das Programm ausprobieren will.
