@@ -1,3 +1,7 @@
+# Über das Projekt
+
+
+
 # Über die Dateien
 
 Der "streamlined_ubertragung"-Code ist für den Pico. Falls mehrere Sensoren verwendet werden muss nur sichergestellt werden
