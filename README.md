@@ -1,4 +1,4 @@
-# predictive_collision_avoidance
+# Über die Dateien
 Repository für meine Projektarbeit über "Prädikative Kollisionsvermeidung in Co-Bot-Umgebung.
 
 Der "streamlined_ubertragung"-Code ist für den Pico. Falls mehrere Sensoren verwendet werden muss nur sichergestellt werden
