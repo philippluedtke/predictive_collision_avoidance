@@ -285,11 +285,10 @@ warnlicht = 0  # Gibt in Stufen die "gefährlichkeit" der erkannten Bewegungen a
 
 last_time = time.time()
 timeout = time.time() + 1  # Maximale Messzeit
-running = True
-paused = False
 
 num_sensors = len(sensor_positions)
-while running:
+while mess_index < 1000:
+    # Um Endlosschleifen zu vermeiden bricht das Programm nach 1000 Messungen automatisch ab.
     dt = time.time() - last_time
     last_time = time.time()
     # dt ist die vergangene Zeit seit dem letzten Durchlauf in Sekunden.
@@ -364,4 +363,5 @@ while running:
     #Anstelle der Darstellung über pygame wird hier nur der "wert" des Warnlichts ausgegeben um die performance zu verbessern
 
     mess_index += 1
+
     # Der Messindex wird erhöht und es folgt die nächste Messung wenn die while-Schleife nicth abgrebrochen wurde.
