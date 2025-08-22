@@ -18,35 +18,6 @@
     way out of the collision if the sensor moves in that direction."""
 
 
-
-''' Dieses Programm soll aus den Daten, die es von einem VL53L5CX ToF-Sensor erhält, abschätzen, ob Objekte mit dem
-    Sensor kollidieren werden. Die Eingangsdaten müssen umbedingt diesem Muster folgen:
-
-    <sensor_id> <Liste der Messdaten> (alles jeweils getrennt durch eine Leerstelle)
-
-    Die Messdaten werden zunächst mittels Clusteranalyse zu Clustern gefügt.
-    Dazu nutze ich die DBSCAN-Methode aus der Bibliothek "sclean_cluster".
-
-    Die Clusteranalyse wird dann genutzt um Gruppen von Punkten zu erstellen, die dann über die Zeit verfolgt werden
-    können. Daraus lässt sich dann ein Bewegungsvektor des Objekts bestimmen.
-    Dazu nutze ich die die NearestNeighbors-Methode, auch aus "sclean_cluster".
-
-    Durch eine rudimentäre Kollisionserkennung wird dann die "Gefahrenstufe" für den Sensor ermittelt.
-    Diese unterteile ich in 3 Stufen auf die ich später näher eingehe, die in etwa so aussehen:
-    0: Keine Gefahr
-    1: Keine Gefahr, aber eine Bewegung wurde erkannt. (Möglicherweise andere Aktionen einleiten,
-    geringere Geschwindigkeit oder ähnliches)
-    2: Kollisionsgefahr erkannt. In diesem Fall könnte man eine Route berechnen, welche der Kollision ausweicht, da
-    das Programm den ungefähren Bewegungsvektor des Objekts ermittelt.
-
-    Diese Gefahrenstufen werden visuell als Ampel dargestellt.
-    In der Visuellen Darstellung werden ausserdem die Punkte und die Position der Sensoren dargestellt.
-    Die Sensoren sind die weissen Punkte, die Farbe der Messpunke varriert je nach Zustand (Position/Cluster).
-
-    Während das Programm läuft kann man die größe der Darstellung mittels +/- ändern.
-    Die Sensibilität der Clusteranalyse kann mit ./, angepasst werden.
-    Mit p wird die Darstellung pausiert (z.B. für Screenshots). Das Programm läuft im Hintergrund weiter.'''
-
 import serial
 import numpy as np
 import time
@@ -112,11 +83,6 @@ def start_new_scan(num_sensors):
     return len(sensor_data) - 1
 
 def parse_com(line):
-    """Hier wird eine über den serial-Port empfangene "line" als neues Messergebnis eingetragen.
-       Zunächst wird der Sensorindex erkannt. Darüber kann die explizite Sensorposition
-       und Drehung einbezogen werden. Dies geschieht dann in der Doppelschleife.
-       Zuletzt wird das Messergebnis in das Dictionary "sensor_data" übertragen."""
-
     """This method parses a "line" (recieved via the serial-port) as new measured data. At first,
     the sensor-index is split off. Now the sensor position and rotation can be used to calcualte the
     true coordinates of the measured point. This is done for every point in the 8x8 matrix of the sensor.
@@ -226,7 +192,7 @@ def line_intersects_sphere(P0, d, M, r, return_vector = False):
     This method was created using a LLM!
     It checks, if a given sphere and line intersect.
 
-    Parameter:
+    Parameters:
         P0 : np.array([x, y, z]) - starting point of the line.
         d  : np.array([dx, dy, dz]) - vector of the line (normed)
         M  : np.array([mx, my, mz]) - center of the sphere
@@ -345,3 +311,4 @@ while mess_index < 1000:
     print(traffic_light)
 
     mess_index += 1
+
