@@ -53,7 +53,7 @@ void loop()
 void print_result(VL53LMZ_ResultsData *Result, const char *sensor_id)
 {
   Serial.print("Sensor: ");Serial.print(sensor_id);Serial.print(" ");
-  const uint8_t zones_per_line = 8; // Feste 8x8 Auflösung
+  const uint8_t zones_per_line = 8; // 8x8 Resolution
   for (uint8_t row = 0; row < zones_per_line; row++) {
     for (uint8_t col = 0; col < zones_per_line; col++) {
       uint8_t zone_index = row * zones_per_line + col;
@@ -61,10 +61,9 @@ void print_result(VL53LMZ_ResultsData *Result, const char *sensor_id)
       if (Result->nb_target_detected[zone_index] > 0) {
         Serial.print(Result->distance_mm[zone_index * VL53LMZ_NB_TARGET_PER_ZONE]);
       } else {
-        Serial.print("9999"); // HIER WIRD DER NONE-WERT EINGESTELLT!! ----------------------------------------- N O N E - W E R T
-        // Der None-Wert ist der Wert, welcher zurückgegeben wird wenn die Messung nicht erfolgreich war. 
-        // Ich habe mich für einen sehr hohen Wert entschieden, da dieser Fall meistens auftritt wenn der Sensor nichts erkennt. 
-        // Da mein Folgeprogramm einen int-Wert erwartet muss ein Wert übergeben werden.
+        Serial.print("9999");
+        // The value 9999 is used when the sensor doesnt get a value or recieves an error.
+        // My following programs then uses this value to proceed
       }
       Serial.print(" ");
     }
