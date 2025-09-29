@@ -1,19 +1,14 @@
-# Über das Projekt
+# About the Project
 
 
 
-# Über die Dateien
+# About the Code
 
-Der "streamlined_ubertragung"-Code ist für den Pico. Falls mehrere Sensoren verwendet werden muss nur sichergestellt werden
-dass das Format der Datenübertragung das selbe ist und ggf. die Sensor-id angepasst werden, da ich diese im Code festlege.
+The "streamlined_ubertragung"-Code is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
 
-Der "clusteranalyse_mit_kollisionsanalyse"-Code ist das eigentliche Programm.
-Wahrscheinlich muss man den Port anpassen (Standard ist COM4) wenn man das Programm ausprobieren will.
+The "clusteranalysis_with_grouping_printvariant" is the main program. The port (in the code COM4 is used) will probably have to be adjusted.
 
-Die "clusteranalyse_mit_kollisionsanalyse_printvariante" ist eine andere Version des selben Programms, wobei die Visuelle Darstellung eingespart wurde.
-Stattdessen wird das "Warnlicht" über die Konsole ausgegeben, was die Performance verbessert.
-
-# Literatur-Sammlung:
+# Collection of sources and other literature:
   # Repo
     https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
     https://github.com/isl-org/Open3D (Open 3D)
@@ -35,6 +30,6 @@ Stattdessen wird das "Warnlicht" über die Konsole ausgegeben, was die Performan
     https://arxiv.org/pdf/1904.09664 (Deep Hough Voting for 3D Object Detection in Point Clouds)
     https://arxiv.org/pdf/2308.11166 (Hierarchical Point-based Active Learning for Semi-supervised Point Cloud Semantic Segmentation)
 
-  # Andere Formate
+  # other Formats
     https://medium.com/@BasicAI-Inc/3d-point-cloud-segmentation-guide-a073b4a6b5f3 (Introduction to 3D Point Cloud Segmentation)
     https://forum.universal-robots.com/t/eye-in-hand-camera-calibration/35922?utm_source=chatgpt.com (Eye-in-hand camera calibration)
