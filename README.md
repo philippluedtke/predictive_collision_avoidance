@@ -20,7 +20,7 @@ The progam can be structured is these steps:
 7. Lastly we can give our output, if there is a collision detected or not.
 
 
-# Collection of sources and other literature:
+# Sources, links and literature:
   # Repo
     https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
     https://github.com/isl-org/Open3D (Open 3D)
