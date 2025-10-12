@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 start_time = time.time()
 
 IMAGE_TIMER = 5
+# How often the Program will show the currently active voxels. Very resource intensive.
 
 VOXEL_GRID_SIZE = 50
 # Defines the real distance between each voxel-center in mm.
@@ -342,3 +343,4 @@ while running:
 
 end_time = time.time()
 print(f"Total time: {end_time - start_time:.6f} sec.")
+
