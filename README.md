@@ -4,9 +4,12 @@ Objective of the project is the development of a reactive collision avoidance sy
 
 # About the Code
 
-The "streamlined_ubertragung"-Code is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
+"streamlined_ubertragung" is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
 
-The "clusteranalysis_with_grouping_printvariant" is the main program. The port (in the code COM4 is used) will probably have to be adjusted.
+"clusteranalysis_with_grouping_printvariant" is the main program. The port (in the code COM4 is used) will probably have to be adjusted.
+
+"voxel_decay_time" is the first voxel-based program. It also uses the time the voxel was measured to determine its status, altough the "decay"-part is not really up-to-date anymore.
+
 
 # How the Program is structured
 
