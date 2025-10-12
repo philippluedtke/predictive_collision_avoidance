@@ -1,8 +1,8 @@
 # About the Project
 
+Objective of the project is the development of a reactive collision avoidance system for a colloborative robot.
 
-
-# About the Code
+# About the Code or how the program will operate
 
 The "streamlined_ubertragung"-Code is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
 
