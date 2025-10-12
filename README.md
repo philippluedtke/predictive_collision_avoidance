@@ -10,7 +10,7 @@ The "clusteranalysis_with_grouping_printvariant" is the main program. The port (
 
 # How the Program is structured
 
-The progam can be structured is these steps:
+The program can be structured is these steps:
 1. Collection of the Sensor-data. (This is not really part of this project)
 2. Storage of the collected data. There are exact (point-cloud) and discrete (voxels) options. Basically, the exact options have less built-in error, but the discrete options offer far better performance which is critical when dealing with object or motion detection. Therefore, voxels seem like the best option. As we want to not only detect objects but also the movement of these objects we will have to track these objects over time. There are, again, two main options: We could store each timeframe is a different grid, for example by giving our points an extra time-coordinate or creating a new grid for every new timeframe, or we could store all points in the same grid but give the points themselves the needed information. The first option basically gives us a history of all recieved data, but the management can become difficult. The second option restricts the size of the stored data significantly, again trading performance for excactness.
 3. First analysis of the stored data to find objects. This can be done by cluster-analysis. The DBSCAN-algorythm is good compromise between performance and accuracy, as its bascially the simplest algorythm which can detect overlapping objects (for example a ring with a different object inside).
