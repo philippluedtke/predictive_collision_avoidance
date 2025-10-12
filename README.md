@@ -31,7 +31,7 @@ The progam can be structured is these steps:
   # Data Sets
     https://github.com/ScanNet/ScanNet (darauf wurde VoteNet trainiert)
 
-  # Paper
+  # Papers
     https://arxiv.org/pdf/2208.07678 (FEC: Fast Euclidean Clustering for Point Cloud Segmentation)
     https://arxiv.org/pdf/2412.04649 (Generating Whole-Body Avoidance Motion through Localized Proximity Sensing)
     https://www.vision.rwth-aachen.de/media/papers/know-what-your-neighbors-do-3d-semantic-segmentation-of-point-clouds/W63P26.pdf (Know What Your Neighbors Do: 3D Semantic     Segmentation of Point Clouds)
