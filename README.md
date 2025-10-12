@@ -2,11 +2,13 @@
 
 Objective of the project is the development of a reactive collision avoidance system for a colloborative robot.
 
-# About the Code or how the program will operate
+# About the Code
 
 The "streamlined_ubertragung"-Code is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
 
 The "clusteranalysis_with_grouping_printvariant" is the main program. The port (in the code COM4 is used) will probably have to be adjusted.
+
+# How the Program is structured
 
 The progam can be structured is these steps:
 1. Collection of the Sensor-data. (This is not really part of this project)
