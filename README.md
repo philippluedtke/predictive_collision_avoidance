@@ -10,7 +10,7 @@ Objective of the project is the development of a reactive collision avoidance sy
 
 "voxel_decay_time" is the first voxel-based program. It also uses the time the voxel was measured to determine its status, altough the "decay"-part is not really up-to-date anymore.
 
-# Hardware 
+# The Hardware 
 - Microcontroller: Raspberry Pi Pico (RP2040)
 - Sensor: VL53L7CX ToF (8x8 grid) (capabale of IR)
 - Mounting: One ring made out of six sensors (with dead zones)
