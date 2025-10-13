@@ -37,6 +37,7 @@ The program can be structured is these steps:
     https://github.com/PointCloudLibrary/pcl (Point Cloud Libary)
     https://github.com/yanx27/Pointnet_Pointnet2_pytorch (PointNet ++, PointNeXT wurde rausgezogen)
     https://github.com/facebookresearch/votenet (Deep Hough Voting for 3D Object Detection in Point Clouds)
+    https://github.com/seung-lab/connected-components-3d (connected-components-3d)
 
   # Data Sets
     https://github.com/ScanNet/ScanNet (darauf wurde VoteNet trainiert)
