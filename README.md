@@ -15,7 +15,9 @@ Objective of the project is the development of a reactive collision avoidance sy
 - Sensor: VL53L7CX ToF (8x8 grid) (capabale of IR)
 - Mounting: One ring made out of six sensors (with dead zones)
 - Robotic arm: UR10
-- 
+- https://ams-osram.com/products/sensor-solutions/direct-time-of-flight-sensors-dtof/ams-tmf8829-48x32-multi-zone-time-of-flight-sensor (leider nicht bestellbar)
+
+
 # How the Program is structured
 
 The program can be structured is these steps:
