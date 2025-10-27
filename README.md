@@ -50,6 +50,7 @@ The program can be structured by these steps:
 # About the final Program:
 
 Our main program (see: "voxel_decay_time") fulfills all of these requirements, but of course there are some limitations, which I now want to elaborate.
+
 The main problem is latency. The datasheet of the VL53L7CX-sensor gives a maximum frequency of 1000 Hz, which should theoretically enable smooth, real-time data to be gathered. However, the Raspberry Pi Pico we use to read the data only outputs at 8.33 Hz. The main Program need approximately 0.03 seconds to complete one cycle (which includes data-gathering and all following steps), although this needs to be more thoroughly tested with larger sample sizes. This gets the total time for one cycle to about 0.15 seconds, or a frequency of 6.67 Hz. One way to reduce latency would be to use parallelization to split the gathering- and refinementprocess and the analysation process.
 
 A different problem is the fact that there is a highest velocity at which a given object is correctly identified. The problem stems from the way the main program tries to trail the objects. To discretize the problem we simply group the data recieved by the sensors together by time. It seems best to use the time needed for one program cycle for this "clock frequency", that means 0.15 seconds or 6.67 Hz in our program. Fundamentally, there are now two differing possible methods: 
