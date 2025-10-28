@@ -57,7 +57,8 @@ A different problem is the fact that there is a highest velocity at which a give
 By checking for overlap between each time-frame we can track each object over time. This is very reliable for low velocities and efficient, because it can be expressed as simple repeated matrix-multiplications. As such it is our main tracking method. As long as the object velocity is smaller than the exposed lenght (meaning the length of the object perpendicular to the detecting sensor) of the object divided by the clock frequency the program will detect overlapping voxels, but above this velocity the object will likely have  already moved out of the way. The Program will then regard the object as two seperate objects, with a velocity of zero.
 To combat this, one could search in proximity of the detected object, but this is disproportionately inefficient as now the program would have to actually compute the distances. One should therefore at least limit the searched volume, for example by using a previously determined movement-vector to restrict the direction. The problem arising from this is the fact that one would need a first movement-direction to begin with, meaning it would have to have already been observed and then accelerated, or have just entered the workspace with an unkown velocity, but likely with a direction into the workspace. This last case (fast object entering the workspace) is arguabely the most dangorous, but also the most difficult to detect and track.
 
-(NOT YET COMPLETE)
+Another problem stems from the inherent uncertainty of the voxel-solution. The further away an object is from the sensor, the more voxels are availabe to represent each data-input. This creates two critical regions: At a certain distance  gaps begin to form between the voxels, creating unclear geometries. This can be fixed by increasing the amount of activated voxels with increasing distance to the sensor. The other critical region is the region directly in front of the sensor. Objects in close proximity can never be fully represented in the same voxel size and will activate most voxels directly in front of the sensor which results in erratic movement detection. There are two possible solutions for this problem, increasing either the voxel-density in the proximity around the sensors (for example by using Adaptive Mesh Refinement) or by using data from a different sensor whose view of the critial region is unobstructed.
+
 
 Datasheet - VL53L7CX - Time-of-Flight 8x8 multizone ranging sensor with 90° FoV: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 
@@ -67,12 +68,12 @@ Datasheet - VL53L7CX - Time-of-Flight 8x8 multizone ranging sensor with 90° FoV
     https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
     https://github.com/isl-org/Open3D (Open 3D)
     https://github.com/PointCloudLibrary/pcl (Point Cloud Libary)
-    https://github.com/yanx27/Pointnet_Pointnet2_pytorch (PointNet ++, PointNeXT wurde rausgezogen)
+    https://github.com/yanx27/Pointnet_Pointnet2_pytorch (PointNet ++, PointNeXT was extreacted)
     https://github.com/facebookresearch/votenet (Deep Hough Voting for 3D Object Detection in Point Clouds)
     https://github.com/seung-lab/connected-components-3d (connected-components-3d)
 
   # Data Sets
-    https://github.com/ScanNet/ScanNet (darauf wurde VoteNet trainiert)
+    https://github.com/ScanNet/ScanNet (VoteNet was trained on this data)
 
   # Papers
     https://arxiv.org/pdf/2208.07678 (FEC: Fast Euclidean Clustering for Point Cloud Segmentation)
