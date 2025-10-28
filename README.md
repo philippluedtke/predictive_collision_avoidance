@@ -20,7 +20,7 @@ Industry 5.0 signifies a pivotal realignment of industrial priorities, emphasisi
 [5] § 154 SGB IX - Einzelnorm
 _________________________________________________________________________________________
 
-# About the Code
+# The Code
 
 "streamlined_ubertragung" is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
 
