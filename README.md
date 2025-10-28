@@ -59,6 +59,7 @@ To combat this, one could search in proximity of the detected object, but this i
 
 <img width="795" height="203" alt="image" src="https://github.com/user-attachments/assets/184c245d-e1bc-43f1-8553-6e45844946e2" />
 
+
 The upper example shows a case with a velocity lower than the maximum detecable, the lower with a velocity higher. 
 
 Another problem stems from the inherent uncertainty of the voxel-solution. The further away an object is from the sensor, the more voxels are availabe to represent each data-input. This creates two critical regions: At a certain distance  gaps begin to form between the voxels, creating unclear geometries. This can be fixed by increasing the amount of activated voxels with increasing distance to the sensor. The other critical region is the region directly in front of the sensor. Objects in close proximity can never be fully represented in the same voxel size and will activate most voxels directly in front of the sensor which results in erratic movement detection. There are two possible solutions for this problem, increasing either the voxel-density in the proximity around the sensors (for example by using Adaptive Mesh Refinement) or by using data from a different sensor whose view of the critial region is unobstructed.
