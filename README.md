@@ -57,17 +57,7 @@ A different problem is the fact that there is a highest velocity at which a give
 By checking for overlap between each time-frame we can track each object over time. This is very reliable for low velocities and efficient, because it can be expressed as simple repeated matrix-multiplications. As such it is our main tracking method. As long as the object velocity is smaller than the exposed lenght (meaning the length of the object perpendicular to the detecting sensor) of the object divided by the clock frequency the program will detect overlapping voxels, but above this velocity the object will likely have  already moved out of the way. The Program will then regard the object as two seperate objects, with a velocity of zero.
 To combat this, one could search in proximity of the detected object, but this is disproportionately inefficient as now the program would have to actually compute the distances. One should therefore at least limit the searched volume, for example by using a previously determined movement-vector to restrict the direction. The problem arising from this is the fact that one would need a first movement-direction to begin with, meaning it would have to have already been observed and then accelerated, or have just entered the workspace with an unkown velocity, but likely with a direction into the workspace. This last case (fast object entering the workspace) is arguabely the most dangorous, but also the most difficult to detect and track.
 
-<img width="220" height="140" alt="image" src="https://github.com/user-attachments/assets/5e0205a3-2edd-4083-a286-1f13fa241d6b" />
-
-1. Grey boxes: position of the object at t=0 
-2. Black boxes: position of the object at t=1
-3. Red dots: activated voxels at t=0
-4. Green dots: activated voxels at t=1
-5. Yellow dots: voxels activated at t=0 and t=1
-
-
-
-
+<img width="795" height="203" alt="image" src="https://github.com/user-attachments/assets/184c245d-e1bc-43f1-8553-6e45844946e2" />
 
 The upper example shows a case with a velocity lower than the maximum detecable, the lower with a velocity higher. 
 
