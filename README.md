@@ -36,7 +36,7 @@ ________________________________________________________________________________
 - https://ams-osram.com/products/sensor-solutions/direct-time-of-flight-sensors-dtof/ams-tmf8829-48x32-multi-zone-time-of-flight-sensor (sadly not yet open for orders)
 
 
-# How the Program is structured
+# How the Program has to be structured
 
 The program can be structured by these steps:
 1. Collection of the Sensor-data. (This is not really part of this project)
