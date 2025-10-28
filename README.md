@@ -49,6 +49,7 @@ The program can be structured by these steps:
 
 <img width="320" height="451" alt="image" src="https://github.com/user-attachments/assets/91461b89-f833-484a-9c1c-a5b276868249" />
 
+Diagram showing the parts of the program. The Orange boxes represent the different storages.
 
 # About the final Program:
 
