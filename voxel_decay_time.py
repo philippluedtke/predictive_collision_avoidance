@@ -12,7 +12,6 @@ import plotly.graph_objects as go
 start_time = time.time()
 
 IMAGE_TIMER = 5
-# How often the Program will show the currently active voxels. Very resource intensive.
 
 VOXEL_GRID_SIZE = 50
 # Defines the real distance between each voxel-center in mm.
@@ -107,7 +106,7 @@ def get_all_active(get_time=None):
     return this_active_voxels
 def is_valid_point(check_point):
     return all(0 <= coord < max_dim for coord, max_dim in zip(check_point, VOXEL_MATRIX_SHAPE))
-def get_parsed_line(raw_line):
+def get_parsed_line_old(raw_line):
     line_items = raw_line.strip().split(' ')
     sensor_id = int(line_items[1])
     distance_array = np.array(line_items[2:2 + 64], dtype=np.float32)
@@ -131,6 +130,32 @@ def get_parsed_line(raw_line):
     parsed_line = transformed_points[distance_matrix.flatten() > 0]
 
     return parsed_line, sensor_id
+
+def get_parsed_line(raw_line):
+    line_items = raw_line.strip().split(' ')
+    sensor_id = int(line_items[1])
+    distance_array = np.array(line_items[2:2 + 64], dtype=np.float32)
+    distance_matrix = distance_array.reshape((SENSOR_MATRIX_WIDTH, SENSOR_MATRIX_WIDTH))
+
+    x, y, z = sensor_positions[sensor_id]
+    rot = get_sensor_rot(sensor_id)
+
+    i = np.arange(SENSOR_MATRIX_WIDTH)
+    j = np.arange(SENSOR_MATRIX_WIDTH)
+    i_grid, j_grid = np.meshgrid(i, j, indexing='ij')
+
+    koo_x = np.tan(np.radians(60/7 * i_grid - 30)) * distance_matrix
+    koo_y = distance_matrix
+    koo_z = np.tan(np.radians(30 - 60/7 * j_grid)) * distance_matrix
+
+    all_points = np.stack([koo_x, koo_y, koo_z], axis=-1)
+
+    transformed_points = rot.apply(all_points.reshape(-1, 3)) + np.array([x, y, z])
+
+    parsed_line = transformed_points[distance_matrix.flatten() > 0]
+
+    return parsed_line, sensor_id
+
 def add_measurement(measured_real_coordinates, sensor_id, measurement_time=None):
 
     measured_voxel_coordinates = get_voxel_coordinates(measured_real_coordinates)
@@ -290,6 +315,7 @@ serial_connection = serial.Serial(
 
 running = True
 next_image_timer = start_time + IMAGE_TIMER
+time_last_cycle = time.time()
 while running:
     time_now = time.time()
 
@@ -326,7 +352,9 @@ while running:
         for detected_object in all_detected_objects:
 
             mean_displacement = detected_object.estimate_movement_vector(time_now)
-            print(f"Movement of Object detected: mean_displacement={mean_displacement}")
+            if mean_displacement != (0, 0, 0):
+                velocity = mean_displacement / (time_now - time_last_cycle)
+                print(f"Movement of Object detected: mean_displacement={mean_displacement}")
 
             detected_object.clean(time_now)
 
@@ -341,6 +369,7 @@ while running:
     if time_now - start_time > 15:
         running = False
 
+    time_last_cycle = time.time()
+
 end_time = time.time()
 print(f"Total time: {end_time - start_time:.6f} sec.")
-
