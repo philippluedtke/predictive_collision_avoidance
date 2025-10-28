@@ -58,7 +58,13 @@ By checking for overlap between each time-frame we can track each object over ti
 To combat this, one could search in proximity of the detected object, but this is disproportionately inefficient as now the program would have to actually compute the distances. One should therefore at least limit the searched volume, for example by using a previously determined movement-vector to restrict the direction. The problem arising from this is the fact that one would need a first movement-direction to begin with, meaning it would have to have already been observed and then accelerated, or have just entered the workspace with an unkown velocity, but likely with a direction into the workspace. This last case (fast object entering the workspace) is arguabely the most dangorous, but also the most difficult to detect and track.
 
 <img width="220" height="140" alt="image" src="https://github.com/user-attachments/assets/5e0205a3-2edd-4083-a286-1f13fa241d6b" />
-Grey boxes: position of the object at t=0 Black boxes: position of the object at t=1 Red dots: activated voxels at t=0 Green dots: activated voxels at t=1 Yellow dots: voxels activated at t=0 and t=1
+
+Grey boxes: position of the object at t=0 
+Black boxes: position of the object at t=1 
+Red dots: activated voxels at t=0 
+Green dots: activated voxels at t=1 
+Yellow dots: voxels activated at t=0 and t=1
+
 The upper example shows a case with a velocity lower than the maximum detecable, the lower with a velocity higher. 
 
 Another problem stems from the inherent uncertainty of the voxel-solution. The further away an object is from the sensor, the more voxels are availabe to represent each data-input. This creates two critical regions: At a certain distance  gaps begin to form between the voxels, creating unclear geometries. This can be fixed by increasing the amount of activated voxels with increasing distance to the sensor. The other critical region is the region directly in front of the sensor. Objects in close proximity can never be fully represented in the same voxel size and will activate most voxels directly in front of the sensor which results in erratic movement detection. There are two possible solutions for this problem, increasing either the voxel-density in the proximity around the sensors (for example by using Adaptive Mesh Refinement) or by using data from a different sensor whose view of the critial region is unobstructed.
