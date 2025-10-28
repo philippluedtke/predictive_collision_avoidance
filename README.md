@@ -61,7 +61,7 @@ By checking for overlap between each time-frame we can track each object over ti
 
 To combat this, one could search in proximity of the detected object, but this is disproportionately inefficient as now the program would have to actually compute the distances. One should therefore at least limit the searched volume, for example by using a previously determined movement-vector to restrict the direction. The problem arising from this is the fact that one would need a first movement-direction to begin with, meaning it would have to have already been observed and then accelerated, or have just entered the workspace with an unkown velocity, but likely with a direction into the workspace. This last case (fast object entering the workspace) is arguabely the most dangorous, but also the most difficult to detect and track.
 
-<img width="795" height="203" alt="image" src="https://github.com/user-attachments/assets/184c245d-e1bc-43f1-8553-6e45844946e2" />
+<img width="320" height="451" alt="image" src="https://github.com/user-attachments/assets/68aab7b0-3364-4db3-9e56-3bda5a00c763" />
 
 The upper example shows a case with a velocity lower than the maximum detecable, the lower with a velocity higher. 
 
