@@ -63,6 +63,9 @@ Another problem stems from the inherent uncertainty of the voxel-solution. The f
 Datasheet - VL53L7CX - Time-of-Flight 8x8 multizone ranging sensor with 90° FoV: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 
 
+<img width="220" height="140" alt="image" src="https://github.com/user-attachments/assets/11493f2e-b671-47b6-ac0b-ae47898b3c3d" />
+
+
 # Sources, links and literature:
   # Repo
     https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
