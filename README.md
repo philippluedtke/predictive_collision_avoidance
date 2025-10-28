@@ -47,6 +47,9 @@ The program can be structured by these steps:
 6. After we have worked out the movement-vector we can use it to predict the next movement. Here there are, again, many possible options to choose from. By only regarding the last movement, we can just continue this path and check for collision on that path. We could, however, also track the whole history of detected movement vectors. Now it becomes possible to use more complex programs to analyse the movement, but we have not yet done so, also because we can not gauge how these affect the overall performance. But just by regarding the last few movements we could predict a given movement far better, for example by not only reiterating the last vector but also the turns between the vectors.
 7. Lastly we can give our output, if there is a collision detected or not. The determined movement-vector can also be shown.
 
+<img width="882" height="1244" alt="image" src="https://github.com/user-attachments/assets/91461b89-f833-484a-9c1c-a5b276868249" />
+
+
 # About the final Program:
 
 Our main program (see: "voxel_decay_time") fulfills all of these requirements, but of course there are some limitations, which I now want to elaborate.
