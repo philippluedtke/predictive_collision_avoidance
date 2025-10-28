@@ -59,11 +59,14 @@ To combat this, one could search in proximity of the detected object, but this i
 
 <img width="220" height="140" alt="image" src="https://github.com/user-attachments/assets/5e0205a3-2edd-4083-a286-1f13fa241d6b" />
 
-Grey boxes: position of the object at t=0 
-Black boxes: position of the object at t=1 
-Red dots: activated voxels at t=0 
-Green dots: activated voxels at t=1 
-Yellow dots: voxels activated at t=0 and t=1
+1. Grey boxes: position of the object at t=0 
+2. Black boxes: position of the object at t=1
+3. Red dots: activated voxels at t=0
+4. Green dots: activated voxels at t=1
+5. Yellow dots: voxels activated at t=0 and t=1
+
+
+
 
 
 The upper example shows a case with a velocity lower than the maximum detecable, the lower with a velocity higher. 
