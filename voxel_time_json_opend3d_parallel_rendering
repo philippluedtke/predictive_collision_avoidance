@@ -1,0 +1,374 @@
+import math
+import numpy as np
+from sklearn.cluster import DBSCAN
+from scipy.spatial.transform import Rotation
+import time
+import serial
+import open3d as o3d
+import json
+import threading
+
+#Threading- und Synchronisation 
+pcd = o3d.geometry.PointCloud()
+pcd_lock = threading.Lock()
+running_event = threading.Event()
+running_event.set()
+# ---
+
+start_time = time.time()
+
+#Globale Konfiguration
+DO_VISUALIZATION = True
+MAX_RUNTIME = 60
+VOXEL_GRID_SIZE = 50
+WORK_ENVIRONMENT_SIZE = np.array([1500, 1400, 1600])
+VOXEL_MATRIX_SHAPE = (WORK_ENVIRONMENT_SIZE / VOXEL_GRID_SIZE).astype(int)
+
+# Defines how many seconds an object will remain "seen" at its last position.
+TIME_TOLERANCE = 1
+
+# --- Sensor-Konfiguration ---
+sensor_positions = np.array([
+    [760.0, 700.0, 800],
+    [737.410, 746.908, 800],
+    [686.650, 758.494, 800],
+    [645.946, 726.034, 800],
+    [645.946, 673.966, 800],
+    [686.650, 641.506, 800],
+    [737.410, 653.092, 800],
+])
+
+sensor_rotation = np.array([
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 51.43],
+    [0.0, 0.0, 102.86],
+    [0.0, 0.0, 154.29],
+    [0.0, 0.0, 205.71],
+    [0.0, 0.0, 257.14],
+    [0.0, 0.0, 308.57],
+])
+
+SENSOR_MATRIX_WIDTH = 8
+#DBScan-Parameter
+DBSCAN_EPS = 2
+DBSCAN_MIN_SAMPLES = 2
+ADD_UNCERTAINTY_SPHERE = False
+TOTAL_VELOCITY_TOLERANCE = 20
+
+# Das Voxel-Grid speichert Zeitstempel
+voxel_matrix = np.zeros(VOXEL_MATRIX_SHAPE, dtype=np.float32)
+
+
+# Helper-Funktionen-
+
+def get_voxel_coordinates(real_coordinate):
+    voxel_coordinate = np.round(real_coordinate / VOXEL_GRID_SIZE)
+    return voxel_coordinate.astype(int)
+
+def get_real_coordinate(voxel_coordinate):
+    real_coordinate = voxel_coordinate * VOXEL_GRID_SIZE
+    return real_coordinate
+
+def get_sensor_rot(sensor_id):
+    angles = sensor_rotation[sensor_id]
+    euler_rotation_matrix = Rotation.from_euler('xyz', angles, degrees=True)
+    return euler_rotation_matrix
+
+def get_sphere_voxels(radius, center=(0, 0, 0)):
+    center = np.array(center)
+    if radius <= 0: return [center]
+    sphere_voxels = []
+    int_radius = math.ceil(radius)
+    for x in range(-int_radius, int_radius + 1):
+        for y in range(-int_radius, int_radius + 1):
+            for z in range(-int_radius, int_radius + 1):
+                distance = math.sqrt(x ** 2 + y ** 2 + z ** 2)
+                if distance <= radius:
+                    sphere_voxels.append((x + center[0], y + center[1], z + center[2]))
+    return np.array(sphere_voxels)
+
+def get_uncertainty_radius(distance, detection_angle=60):
+    radius_modifier = 2
+    tan = math.tan(detection_angle / 2)
+    field_of_view_width = tan * distance
+    uncertainty_radius = -1 * field_of_view_width / (SENSOR_MATRIX_WIDTH * radius_modifier)
+    return uncertainty_radius
+
+def get_distance(coordinate_a, coordinate_b):
+    distance = np.linalg.norm(coordinate_a - coordinate_b)
+    return distance
+
+def get_all_active(get_time=None):
+    """
+    Filtert alle Punkte aus der Voxel-Matrix, die neuer als TIME_TOLERANCE sind.
+    """
+    if not get_time: get_time = time.time()
+    indices = np.where(get_time - voxel_matrix < TIME_TOLERANCE)
+    this_active_voxels = np.column_stack(indices)
+    return this_active_voxels
+
+def is_valid_point(check_point):
+    return all(0 <= coord < max_dim for coord, max_dim in zip(check_point, VOXEL_MATRIX_SHAPE))
+
+def read_json(json_input, time_now):
+    SENSORS_ON_RING = 7
+    try:
+        json_data = json.loads(json_input)
+    except json.JSONDecodeError:
+        print(f"Ungültiges JSON empfangen: {json_input}")
+        return None
+    if not isinstance(json_data, dict):
+        print(f"json ist kein dictionary: {json_data}")
+        return None
+        
+    for sensor_id in range(SENSORS_ON_RING):
+        sensor_name = f"sensor{sensor_id}"
+        if sensor_name not in json_data:
+            # print(f"Warnung: {sensor_name} nicht in JSON-Daten gefunden.") # Optional
+            continue
+            
+        distance_array = np.array([item[0] for item in json_data[sensor_name]])
+        distance_matrix = distance_array.reshape((SENSOR_MATRIX_WIDTH, SENSOR_MATRIX_WIDTH))
+        
+        x, y, z = sensor_positions[sensor_id]
+        rot = get_sensor_rot(sensor_id)
+        
+        i = np.arange(SENSOR_MATRIX_WIDTH)
+        j = np.arange(SENSOR_MATRIX_WIDTH)
+        i_grid, j_grid = np.meshgrid(i, j, indexing='ij')
+        
+        koo_x = np.tan(np.radians(60 / 7 * i_grid - 30)) * distance_matrix
+        koo_y = distance_matrix
+        koo_z = np.tan(np.radians(30 - 60 / 7 * j_grid)) * distance_matrix
+        
+        all_points = np.stack([koo_x, koo_y, koo_z], axis=-1)
+        transformed_points = rot.apply(all_points.reshape(-1, 3)) + np.array([x, y, z])
+        parsed_line = transformed_points[distance_matrix.flatten() > 0]
+        
+        add_measurement(parsed_line, sensor_id, time_now)
+
+def add_measurement(measured_real_coordinates, sensor_id, measurement_time=None):
+    measured_voxel_coordinates = get_voxel_coordinates(measured_real_coordinates)
+    measurement_time = measurement_time if measurement_time else time.time()
+    
+    if ADD_UNCERTAINTY_SPHERE:
+        # ... (Logik für Unsicherheits-Sphäre) ...
+        pass
+    else:
+        for coordinate in measured_voxel_coordinates:
+            if is_valid_point(coordinate):
+                # Speichert den Zeitstempel im Voxel-Grid
+                voxel_matrix[tuple(coordinate)] = measurement_time
+
+def get_DBSCAN_clustering(voxels_to_scan):
+    points = np.vstack(voxels_to_scan)
+    clustering = DBSCAN(eps=DBSCAN_EPS, min_samples=DBSCAN_MIN_SAMPLES).fit(points)
+    return clustering
+
+# --- Objekt-Tracking-Klasse ---
+all_detected_objects = []
+class Detected_Object:
+    """Ein Objekt, definiert durch Voxel-Cluster über die Zeit."""
+    
+    def __init__(self, initial_voxels, current_time):
+        all_detected_objects.append(self)
+        self.listed_voxels_list = [initial_voxels]
+        self.time_list = [current_time]
+        
+    def add_new_voxels(self, new_voxels, current_time):
+        self.listed_voxels_list.append(new_voxels)
+        self.time_list.append(current_time)
+        
+    def check_overlap(self, other_voxels, current_time):
+        current_voxels = []
+        for i, voxel_array in enumerate(self.listed_voxels_list):
+            if current_time - self.time_list[i] < TIME_TOLERANCE:
+                current_voxels.extend(voxel_array)
+        set1 = set(map(tuple, current_voxels))
+        set2 = set(map(tuple, other_voxels))
+        return len(set1 & set2) > 0
+        
+    def clean(self, current_time):
+        """Entfernt alte Voxel-Daten aus diesem Objekt."""
+        filtered_data = [(voxels, measurement_time) for voxels, measurement_time in
+                         zip(self.listed_voxels_list, self.time_list)
+                         if current_time - measurement_time < TIME_TOLERANCE]
+                         
+        if filtered_data:
+            self.listed_voxels_list, self.time_list = zip(*filtered_data)
+            self.listed_voxels_list = list(self.listed_voxels_list)
+            self.time_list = list(self.time_list)
+        else:
+            if self in all_detected_objects:
+                all_detected_objects.remove(self)
+                
+    def estimate_movement_vector(self, current_time):
+        current_center = None
+        previous_center = None
+        for i in range(len(self.listed_voxels_list)):
+            voxels = self.listed_voxels_list[i]
+            if len(voxels) == 0:
+                continue
+            center = np.mean(voxels, axis=0)
+            if self.time_list[i] == current_time:
+                current_center = center
+            elif current_time - self.time_list[i] < TIME_TOLERANCE:
+                previous_center = center
+                
+        if current_center is not None and previous_center is not None:
+            return current_center - previous_center
+        else:
+            return np.array([0, 0, 0])
+
+try:
+    serial_connection = serial.Serial(
+        port='COM6',
+        baudrate=460800,
+        timeout=1
+    )
+except serial.SerialException as e:
+    print(f"Fehler beim Öffnen von COM6: {e}")
+    print("Programm wird beendet. Bitte Sensor anschließen.")
+    running_event.clear()
+    
+all_cycle_times = []
+
+def data_processing_thread():
+    """
+    Diese Funktion läuft in einem separaten Thread und kümmert sich um
+    das serielle Lesen, Parsen, Clustern und die Objekt-Erkennung.
+    """
+    global time_last_cycle_timestamp # Nötig, um UnboundLocalError zu vermeiden
+    time_last_cycle = 0.0
+    time_last_cycle_timestamp = time.time()
+    
+    print("Datenverarbeitungs-Thread gestartet...")
+
+    while running_event.is_set():
+        time_now = time.time()
+
+        new_raw_line = serial_connection.readline().decode('utf-8').rstrip()
+        
+        if not new_raw_line:
+            time.sleep(0.001) # CPU-Last reduzieren, wenn keine Daten kommen
+            continue
+
+        read_json(new_raw_line, time_now)
+
+        # Aktive Voxel holen (Filterung < 1 Sekunde passiert hier)
+        active_voxels = get_all_active(time_now)
+
+        # Punktwolke für Render-Thread thread-sicher aktualisieren
+        if active_voxels.size > 0:
+            with pcd_lock:
+                pcd.points = o3d.utility.Vector3dVector(active_voxels)
+                pcd.paint_uniform_color([0.1, 0.1, 0.9])
+        else:
+            # Wichtig: Leeren, wenn keine Voxel aktiv sind
+            with pcd_lock:
+                pcd.points = o3d.utility.Vector3dVector(np.empty((0, 3)))
+
+        # DBSCAN und Objekt-Logik
+        if active_voxels.size > 0 and time_last_cycle > 0:
+            db_scan = get_DBSCAN_clustering(active_voxels)
+            labels = db_scan.labels_
+            cluster_labels = [label for label in np.unique(labels) if label != -1]
+
+            for cluster_label in cluster_labels:
+                voxels_of_this_cluster = active_voxels[labels == cluster_label]
+                voxels_allocated = False
+                for detected_object in all_detected_objects:
+                    if detected_object.check_overlap(voxels_of_this_cluster, time_now):
+                        detected_object.add_new_voxels(voxels_of_this_cluster, time_now)
+                        voxels_allocated = True
+                        break
+                if not voxels_allocated:
+                    new_object = Detected_Object(voxels_of_this_cluster, time_now)
+                    print(f"t = {(time_now - start_time):.2f}s: New Object detected.")
+
+            for detected_object in all_detected_objects:
+                mean_displacement = detected_object.estimate_movement_vector(time_now)
+                if mean_displacement.any():
+                    time_delta = time_now - time_last_cycle_timestamp
+                    if time_delta == 0: time_delta = 0.01
+                    velocity_vector = mean_displacement / time_delta
+                    total_velociy = np.linalg.norm(velocity_vector)
+                    if total_velociy > TOTAL_VELOCITY_TOLERANCE:
+                        print(f"t = {(time_now - start_time):.2f}s: Movement: v={velocity_vector}mm/s ({total_velociy}mm/s)")
+                detected_object.clean(time_now)
+
+        if time_now - start_time > MAX_RUNTIME:
+            print("Maximale Laufzeit erreicht. Stoppe Threads...")
+            running_event.clear()
+
+        time_last_cycle = time.time() - time_now
+        time_last_cycle_timestamp = time_now
+        all_cycle_times.append(time_last_cycle)
+    
+    serial_connection.close()
+    print("Datenverarbeitungs-Thread beendet.")
+
+
+# Render-Thread
+if __name__ == "__main__":
+    if DO_VISUALIZATION and running_event.is_set():
+        
+        print("Render-Thread (Main) gestartet...")
+        
+        all_geometries = [pcd] # Startet mit der (leeren) globalen Punktwolke
+
+        # Sensoren als rote Kugeln
+        sensor_coords_scaled = sensor_positions / VOXEL_GRID_SIZE
+        for i, pos in enumerate(sensor_coords_scaled):
+            sensor_sphere = o3d.geometry.TriangleMesh.create_sphere(radius=0.8)
+            sensor_sphere.paint_uniform_color([1.0, 0.0, 0.0])
+            sensor_sphere.translate(pos)
+            all_geometries.append(sensor_sphere)
+
+        room_bounds = o3d.geometry.AxisAlignedBoundingBox([0, 0, 0], VOXEL_MATRIX_SHAPE)
+        room_lines = o3d.geometry.LineSet.create_from_axis_aligned_bounding_box(room_bounds)
+        room_lines.paint_uniform_color([0.5, 0.5, 0.5])
+        all_geometries.append(room_lines)
+
+        processing_thread = threading.Thread(target=data_processing_thread)
+        processing_thread.start()
+
+        def update_renderer(vis):
+            """Wird von Open3D kontinuierlich im Main-Thread aufgerufen."""
+            
+            # Geometrie thread-sicher aktualisieren
+            with pcd_lock:
+                vis.update_geometry(pcd)
+            
+            # Fenster-Events verarbeiten und neu zeichnen
+            vis.poll_events()
+            vis.update_renderer()
+            
+            # Stopp-Signal vom anderen Thread prüfen
+            if not running_event.is_set():
+                vis.destroy_window()
+
+        # Diese Funktion übernimmt den Main-Thread, bis das Fenster geschlossen wird.
+        print("Starte Open3D-Visualizer...")
+        o3d.visualization.draw_geometries_with_animation_callback(
+            all_geometries,
+            update_renderer,
+            window_name="Open3D Live Voxel",
+            width=1000, height=800
+        )
+
+        print("Render-Thread beendet. Warte auf Daten-Thread...")
+        processing_thread.join()
+        print("Alle Threads beendet.")
+
+    elif running_event.is_set():
+        # Nur Datenverarbeitung ohne Visualisierung
+        print("Starte nur Datenverarbeitung (keine Visualisierung)...")
+        data_processing_thread()
+
+    end_time = time.time()
+    print(f"Total time: {end_time - start_time:.6f} sec.")
+    if len(all_cycle_times) > 0:
+        print(f"Average cycle time: {sum(all_cycle_times) / len(all_cycle_times)} with {len(all_cycle_times)} cycles.")
+    else:
+        print("Keine Zyklen abgeschlossen.")
