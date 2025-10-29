@@ -13,7 +13,6 @@ pcd = o3d.geometry.PointCloud()
 pcd_lock = threading.Lock()
 running_event = threading.Event()
 running_event.set()
-# ---
 
 start_time = time.time()
 
@@ -27,7 +26,7 @@ VOXEL_MATRIX_SHAPE = (WORK_ENVIRONMENT_SIZE / VOXEL_GRID_SIZE).astype(int)
 # Defines how many seconds an object will remain "seen" at its last position.
 TIME_TOLERANCE = 1
 
-# --- Sensor-Konfiguration ---
+# Sensor Konfiguration
 sensor_positions = np.array([
     [760.0, 700.0, 800],
     [737.410, 746.908, 800],
