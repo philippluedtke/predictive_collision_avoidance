@@ -111,13 +111,18 @@ ALL_SENSOR_ROTATION = np.array([
 ])
 for i in range(len(sensor_rotation)):
     sensor_rotation[i] = sensor_rotation[i] + ALL_SENSOR_ROTATION
-
+# This can adjust the rotation of all sensors for imporoved confirmability.
 
 SENSOR_MATRIX_WIDTH = 8
+# The VL53L7CX Sensor outputs an 8x8 Matrix. If the 4x4 option would be used, it could be changed here.
 
 DBSCAN_EPS = 4
 DBSCAN_MIN_SAMPLES = 5
-# These variables define how the DBSCAN algorithm works.
+# These variables define how the DBSCAN algorithm works:
+# eps is the highest distance of two points before they are no longer grouped together.
+# min_samples is the minimal amount to voxels needed to be detected as an object.
+# These values were found by trial and error. Other values can the used, but we found
+# that eps below 3.5 result in too many incorrect movement vectors.
 
 TOTAL_VELOCITY_TOLERANCE = 150
 # Defines the minimum velocity at which the program outputs a found velocity, everything lower will be regarded as an error.
@@ -130,21 +135,28 @@ OBJECT_LIFESPAN = 1
 
 
 def get_voxel_coordinates(real_coordinate):
+    """Returns the voxel-coordinates of given real coordinates."""
     voxel_coordinate = np.round(real_coordinate / VOXEL_GRID_SIZE)
     return voxel_coordinate.astype(int)
 def get_real_coordinate(voxel_coordinate):
+    """Returns the real center coordinates of given voxel-coordinates."""
     real_coordinate = voxel_coordinate * VOXEL_GRID_SIZE
     return real_coordinate
 def get_sensor_rot(sensor_id):
+    """Returns the Euler-Rotation-matrices for a given sensor.
+    It draws on the already defined sensor-rotations matrix."""
     angles = sensor_rotation[sensor_id]
     euler_rotation_matrix = Rotation.from_euler('xyz', angles, degrees=True)
     return euler_rotation_matrix
 
 def is_valid_point(check_point):
+    """Checks if a given voxel coordinate is inside the work environment."""
     return all(0 <= coord < max_dim for coord, max_dim in zip(check_point, VOXEL_MATRIX_SHAPE))
 
 
 def read_and_input_new_data(json_input):
+    """Reads the given json-data and updates the voxel_matrices.
+     This is preset for the ring with seven sensors."""
     SENSORS_ON_RING = 7
 
     json_data = json.loads(json_input)
@@ -183,9 +195,10 @@ def read_and_input_new_data(json_input):
 
     voxel_matrices.append(this_frame_matrix)
 
-def add_measurement(measured_real_coordinates, matrix):
+def add_measurement(measured_voxels, matrix):
+    """Adds new voxels to a given matrix."""
 
-    measured_voxel_coordinates = get_voxel_coordinates(measured_real_coordinates)
+    measured_voxel_coordinates = get_voxel_coordinates(measured_voxels)
 
     added_points = 0
 
@@ -199,6 +212,7 @@ def add_measurement(measured_real_coordinates, matrix):
     #print(f"Updated {added_points} voxels at t={measurement_time - start_time}.")
 
 def get_DBSCAN_clustering(voxels_to_scan):
+    """Returns the clustering the DBSCAN of a given list of voxels."""
     points = np.vstack(voxels_to_scan)
 
     clustering = DBSCAN(eps=DBSCAN_EPS, min_samples=DBSCAN_MIN_SAMPLES).fit(points)
@@ -206,7 +220,11 @@ def get_DBSCAN_clustering(voxels_to_scan):
 
 
 def dilate_voxels(voxels, tolerance):
-    """Expands a voxel-volume by the given tolerance."""
+    """Expands a voxel-volume by the given tolerance.
+    This is used to more efficiently check if a grop of voxels is near another group of voxels
+    in a process called Morphological Dilation.
+    This function was created by AI."""
+
     dilated_set = set()
 
     tolerance_voxels = int(np.ceil(tolerance / VOXEL_GRID_SIZE))
@@ -250,16 +268,21 @@ class Detected_Object:
 
 
     def add_new_voxels(self, new_voxels):
+        """Used to add new voxels to this object.
+        PROBLEM: If there was already a group of voxels added in this timeframe they get pushed back (in the list) and
+        the voxels are then regarded as noise."""
+
         unique_voxels = np.unique(new_voxels, axis=0)
         self.listed_voxels_list.append(unique_voxels)
 
-
         #print(f"t = {(time_now - start_time):.2f}s: Updated Object '{self.ID}' with {len(new_voxels_list)} voxels.")
-
 
         self.last_time_updated = time.time()
 
     def check_overlap(self, other_voxels):
+        """Used to check for overlap between a given list of voxels and the previous volume of voxels of this object.
+        This way, objects can be traced through time."""
+
         current_voxels = self.listed_voxels_list[-1]
 
         set1 = set(map(tuple, current_voxels))
@@ -272,6 +295,9 @@ class Detected_Object:
             return False
 
     def check_nearby(self, other_voxels):
+        """Used to check if a given list of voxels is near this object.
+        It uses the aforementioned dilate_voxels-function."""
+
         current_voxels = self.listed_voxels_list[-1]
 
         if len(current_voxels) == 0 or len(other_voxels) == 0:
@@ -290,8 +316,8 @@ class Detected_Object:
 
 
     def clean(self):
-        # To prevent clogging old measurements are removed here.
-        # If there are no more voxels remaining, the object deletes the pointer to itself.
+        """To prevent clogging old measurements are removed here.
+        If there was no update to the object after a given amount of time (OBJECT_LIFESPAN) it gets deleted."""
 
         time_now = time.time()
         if time_now > self.last_time_updated + OBJECT_LIFESPAN:
@@ -299,6 +325,9 @@ class Detected_Object:
             #print(f"t = {(time_now - start_time):.2f}s: Object '{self.ID}' deleted after {(time_now - self.TIME_OF_CREATION):.2f}s.")
 
     def estimate_movement_vector(self):
+        """Estimates the movement vector of the given object, using the last two added voxel-volumes.
+        THIS SHOULD ALSO BE IMPROVED UPON!"""
+
         if len(self.listed_voxels_list) < 2:
             return np.array([0, 0, 0])
 
