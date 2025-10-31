@@ -69,6 +69,8 @@ The upper example shows a case with a velocity lower than the maximum detecable,
 Another problem stems from the inherent uncertainty of the voxel-solution. The further away an object is from the sensor, the more voxels are availabe to represent each data-input. This creates two critical regions: At a certain distance  gaps begin to form between the voxels, creating unclear geometries. This can be fixed by increasing the amount of activated voxels with increasing distance to the sensor. The other critical region is the region directly in front of the sensor. Objects in close proximity can never be fully represented in the same voxel size and will activate most voxels directly in front of the sensor which results in erratic movement detection. Two possible solutions for this problem are to either increase the voxel-density in the proximity around the sensors (for example by using Adaptive Mesh Refinement) or by using data from a different sensor whose view of the critial region is unobstructed, both of which exceed the scope of this project.
 
 
+Morphologische Dilation 
+
 Datasheet - VL53L7CX - Time-of-Flight 8x8 multizone ranging sensor with 90° FoV: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 
 
