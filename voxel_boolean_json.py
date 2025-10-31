@@ -12,6 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 screen_width, screen_height = screen.get_width(), screen.get_height()
 PYGAME_SCALE = 5
+font = pygame.font.SysFont('Arial', 12)
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -36,12 +37,18 @@ def visualize_all_voxels_in_pygame():
 def visualize_objects_in_pygame():
     screen.fill(BLACK)
 
-    for this_object in all_detected_objects:
+    for i, this_object in enumerate(all_detected_objects):
 
         voxel_coordinates = this_object.listed_voxels_list[-1]
 
         for voxel in voxel_coordinates:
             pygame_draw_isometric(voxel, this_object.pygame_color)
+
+        screen_koo = (screen_width * 1 / 8,
+                      screen_height * 5 / 8 + i * font.get_height())
+        text = f"Object {this_object.ID}"
+        rendered_text = font.render(text, True, this_object.pygame_color)
+        screen.blit(rendered_text, screen_koo)
 
     pygame.display.flip()
 
@@ -405,7 +412,7 @@ while running:
             total_velociy = np.linalg.norm(velocity_vector)
 
             if total_velociy > TOTAL_VELOCITY_TOLERANCE:
-                print(f"t = {(time_now - start_time):.2f}s: Movement of Object detected: v={velocity_vector}mm/s ({total_velociy}mm/s)")
+                print(f"t = {(time_now - start_time):.2f}s: Movement of Object '{detected_object.ID}' detected: v={velocity_vector}mm/s ({total_velociy}mm/s)")
 
     time_last_cycle = time.time() - time_now
     #print(f"Cylce complete. Time={time_last_cycle}")
@@ -418,4 +425,4 @@ while running:
 
 end_time = time.time()
 print(f"Runtime over. Real total time: {end_time - start_time:.2f} sec.")
-print(f"Ran over {len(all_cycle_times)} cycles with an average time of {sum(all_cycle_times) / len(all_cycle_times):.4f} seconds per cycle.")
+print(f"Completed {len(all_cycle_times)} cycles with an average time of {sum(all_cycle_times) / len(all_cycle_times):.4f} seconds per cycle.")
