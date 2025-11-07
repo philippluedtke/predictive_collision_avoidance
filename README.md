@@ -22,11 +22,9 @@ ________________________________________________________________________________
 
 # The Code
 
-"streamlined_ubertragung" is used for the Pico. If more than one sensor is used the sensor-id variable should be adjusted.
+"30_7_pico_serial_connection.ino" can be used for the pico. All programs with the "json"-token however use a different method to the used with the sensor ring.
 
-"clusteranalysis_with_grouping_printvariant" is the main program. The port (in the code COM4 is used) will probably have to be adjusted.
-
-"voxel_decay_time" is the first voxel-based program. It also uses the time the voxel was measured to determine its status, altough the "decay"-part is not really up-to-date anymore.
+"voxel_decay_time" is the voxel-based program.
 
 # The Hardware 
 - Microcontroller: Raspberry Pi Pico (RP2040)
