@@ -74,8 +74,9 @@ In late october/early november 2025 we tested our code.
 
 # Current Problem wit DBScan in ToF pointcloud setting 
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces our ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that our sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBScan. This also allows for more empirical parameter optimisation of the DBScan parameter.
-<img width="617" height="445" alt="image" src="https://github.com/user-attachments/assets/b45a1278-5f81-46cc-9527-4ffe1cd3aa28" />
-<img width="617" height="445" alt="image" src="https://github.com/user-attachments/assets/03be48fd-0709-4abd-b1e1-a4671e010b15" />
+
+<img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/b45a1278-5f81-46cc-9527-4ffe1cd3aa28" />
+<img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/03be48fd-0709-4abd-b1e1-a4671e010b15" />
 
 
 
