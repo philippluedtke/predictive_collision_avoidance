@@ -76,7 +76,9 @@ A other problem was the cycle-clock-speed. We tried classic boolean-based voxels
 
 After adressing these problems we were able to gather results for motion vectors which were relatively close to the real movement, altough there was still significant noise sometimes resulting in erratic, but fundamentally true findings (real direction, but wrong velocity). We found another problem when trying to detect two movements, as the errors we previously had with the static surroundings now also applied to the two objects when they came closer together. Nonetheless, we were able to get quite satisfacory results.
 
-https://github.com/user-attachments/assets/281014b9-6057-447b-b9ba-4c58a2e62b08
+https://github.com/user-attachments/assets/aab121cd-14c5-4a12-bac2-3a51d68af8f2
+
+This video shows our test with two movements. 
 
 # Current Problem wit DBScan in ToF pointcloud setting 
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces our ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that our sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBScan. This also allows for more empirical parameter optimisation of the DBScan parameter.
