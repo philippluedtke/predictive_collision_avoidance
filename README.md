@@ -100,6 +100,9 @@ DBSCAN causes spatially distant points to be grouped together when used in envir
 - two groups limitation:
 - sensor fluctuation -> problems
 
+# Solve DBSCAN Algorithms by tuning its hyper parameters
+<img width="1332" height="843" alt="image" src="https://github.com/user-attachments/assets/085fdda3-7be2-41f0-8ef1-892754113d5d" />
+
 # Sources, links and literature:
   # Repo
     https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
