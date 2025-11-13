@@ -80,12 +80,18 @@ https://github.com/user-attachments/assets/aab121cd-14c5-4a12-bac2-3a51d68af8f2
 
 This video shows our test with two moving objects, birds eye view. The beginning (0-2 seconds) shows one person approaching the sensors relatively fast, resulting in erratic behavior. Until 5 seconds the movement can then be identified quite well. At 6 seconds, the second person apporaches the sensors. While both persons are then near the sensors, the detected objects merge and result in no (or very small) detected motion. Around 11 seconds, the first person exits the sensor-range and both objects seperate again. The second persons movement can then be observed well again unit he exits the sensor range as well.
 
+The parameters used in the program were adjusted empirically. For the DBSCAN-parameters (eps and min_samples) we used the established "k-distance-plot" and "grid-search with slihouette score" algorithms to find the optimal values for our given problem.
+
 # Current limitations of the Program:
 Fundamentally there are two forms of limitatiosn for our final program: Theoretical limitations which stem from the way the program works and real life limitations which mainly come from uncertanties of the sensors.
 
 The most critical limitation is the size of objects which can be detected, which is variable and dependent on distance from the sensors, movement speed and material (reflective or translucent meterials cannot be detected) of the object. Testing revealed that rods with a diameter of around 2cm can only be detected directly in front of the sensor ring while objects with a diameter larger than 5cm (a human arm for example) can be deteced at a distance greater than 100cm. Objects which are moving can generally be detected better, as they can often be seen by more sensors, although it's difficult to get precise thresholds for this phenomenon, as it again also depends on the distance to the sensors.
 
 The theoretical limitations were already addressed previously, but the main problems are the difficulties regarding DBSCAN, the detection of movement speeds with variable maximal and minimal speeds, the necessary detection of stationary objects and the sometimes erratic detected motion vectors.
+
+<img width="410" height="211" alt="image" src="https://github.com/user-attachments/assets/e311e7a7-2d18-4d4c-a943-2c5a3fc78bee" />
+
+Here, the results of the value-finding algorithm can be seen.
 
 # Current Problem wit DBSCAN in ToF pointcloud setting 
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces our ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that our sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBSCAN. This also allows for more empirical parameter optimisation of the DBSCAN parameter.
