@@ -101,7 +101,7 @@ DBSCAN causes spatially distant points to be grouped together when used in envir
 - sensor fluctuation -> problems
 
 # Solve DBSCAN Algorithms by tuning its hyper parameters
-<img width="1332" height="843" alt="image" src="https://github.com/user-attachments/assets/085fdda3-7be2-41f0-8ef1-892754113d5d" />
+<img width="320" height="451"" alt="image" src="https://github.com/user-attachments/assets/681314f4-26a1-45f7-8ad7-d18fd8754f4e" />
 
 # Sources, links and literature:
   # Repo
