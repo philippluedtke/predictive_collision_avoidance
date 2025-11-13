@@ -86,7 +86,12 @@ DBSCAN causes spatially distant points to be grouped together when used in envir
 <img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/b45a1278-5f81-46cc-9527-4ffe1cd3aa28" />
 <img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/03be48fd-0709-4abd-b1e1-a4671e010b15" />
 
-
+# Limitations
+- Objectsize depedent on sensor hardware (density of voxels)
+- paramater optimization empirically done
+- max and min velocities -> from object detection and
+- two groups limitation:
+- sensor fluctuation -> problems
 
 # Sources, links and literature:
   # Repo
