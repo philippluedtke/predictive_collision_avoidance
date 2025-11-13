@@ -89,7 +89,7 @@ The most critical limitation is the size of objects which can be detected, which
 
 The theoretical limitations were already addressed previously, but the main problems are the difficulties regarding DBSCAN, the detection of movement speeds with variable maximal and minimal speeds, the necessary detection of stationary objects and the sometimes erratic detected motion vectors.
 
-<img width="410" height="211" alt="image" src="https://github.com/user-attachments/assets/e311e7a7-2d18-4d4c-a943-2c5a3fc78bee" />
+<img width="820" height="422" alt="image" src="https://github.com/user-attachments/assets/e311e7a7-2d18-4d4c-a943-2c5a3fc78bee" />
 
 Here, the results of the value-finding algorithm can be seen.
 
