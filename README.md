@@ -60,15 +60,10 @@ The Program tracks different objects using two different methods. First, it chec
 <img width="319" height="203" alt="image" src="https://github.com/user-attachments/assets/37b3aafe-6c16-41dd-aa9b-fcd019687f50" />
 
 Grey boxes: position of the object at t=0
-
 Black boxes: position of the object at t=1
-
 Red dots: active voxels at t=0
-
 Green dots: active voxels at t=1
-
 Yellow dots: voxels which are active at t=0 and t=1
-
 Black dots: inactive voxels
 
 In particular the overlap-solution introduces the first major theoretical  problem because it can only detect motion up to a certain speed. The figure above illustrates the origin of this problem: The upper sketch shows the algorithm working as intended, as the object occupies some voxels of its last location one time-step later as well. If the object moves too fast however, no connection can be found and the Object can not be successfully linked. The upper limit on how fast an object can move before it can no longer be detected depends on the object's size, distance to the sensors and the program’s cycle-time and can therefore not be exactly determined.
