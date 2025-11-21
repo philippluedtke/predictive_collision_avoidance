@@ -9,15 +9,25 @@ import serial
 import json
 import matplotlib.pyplot as plt
 
-# Config
-COLLECTION_DURATION_T = 30
-NUM_FRAMES_N = 10
-start_time = time.time()
-VOXEL_GRID_SIZE = 50.0 
+"""
+This program is used for the two optimisation Methods for the DBSCAN parameters. 
+For more information on the basic funcitons refer to the main program file.
+"""
+
+# Optimisation program parameters
+COLLECTION_DURATION_T = 30 # Defines the runtime of the data-collection in seconds.
+NUM_FRAMES_N = 10 Defines how many frames are collected during the runtime.
+
+# Other parameters, refer to the main program for more information.
+VOXEL_GRID_SIZE = 50.0
 WORK_ENVIRONMENT_SIZE = np.array([1500, 1400, 1600])
 VOXEL_MATRIX_SHAPE = (WORK_ENVIRONMENT_SIZE / VOXEL_GRID_SIZE).astype(int)
-TIME_TOLERANCE = 1.0
-STATIC_HIT_THRESHOLD = 100 
+TIME_TOLERANCE = 0.08
+STATIC_HIT_THRESHOLD = 100
+SENSOR_MATRIX_WIDTH = 8
+COM_PORT = 'COM3'
+
+start_time = time.time()
 
 # Sensor Setup
 sensor_positions = np.array([
@@ -33,7 +43,6 @@ sensor_rotation = np.array([
 ALL_SENSOR_ROTATION = np.array([[0.0, 0.0, 45.0]])
 for i in range(len(sensor_rotation)):
     sensor_rotation[i] = sensor_rotation[i] + ALL_SENSOR_ROTATION
-SENSOR_MATRIX_WIDTH = 8
 
 # Voxel Grids
 voxel_matrix = np.zeros(VOXEL_MATRIX_SHAPE, dtype=np.float64)
@@ -99,7 +108,7 @@ def run_optimization():
     print(f"Starting data collection for {COLLECTION_DURATION_T} seconds...")
     
     try:
-        serial_connection = serial.Serial(port='COM3', baudrate=460800, timeout=1) # port may vary
+        serial_connection = serial.Serial(port=COM_PORT, baudrate=460800, timeout=1) # port may vary
     except serial.SerialException as e:
         print(f"Could not open COM-Port: {e}")
         return
