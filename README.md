@@ -57,7 +57,14 @@ To store the collected data, we experimented with classic boolean-based voxels a
 
 The Program tracks different objects using two different methods. First, it checks for overlap between the objects last positions and the positions of the new, not yet associated clusters detected by DBSCAN. This method works reasonably well and has a very low error-rate, but has some difficulties and problems discussed later on. Notably, if no object can be associated by overlap the reason can be that the object moved away too fast. We then associate the object with the nearest yet unassociated object in a given radius. Although this is more prone to false associations it is a necessary enhancement of our basic method. Obtaining the motion vector for objects which have been tracked over time is very simple.
 
-<img width="795" height="203" alt="image" src="https://github.com/user-attachments/assets/bf5b9d51-4a5c-4192-beeb-ac4cd531b771" />
+<img width="319" height="203" alt="image" src="https://github.com/user-attachments/assets/37b3aafe-6c16-41dd-aa9b-fcd019687f50" />
+
+Grey boxes: position of the object at t=0
+Black boxes: position of the object at t=1
+Red dots: active voxels at t=0
+Green dots: active voxels at t=1
+Yellow dots: voxels which are active at t=0 and t=1
+Black dots: inactive voxels
 
 In particular the overlap-solution introduces the first major theoretical  problem because it can only detect motion up to a certain speed. The figure above illustrates the origin of this problem: The upper sketch shows the algorithm working as intended, as the object occupies some voxels of its last location one time-step later as well. If the object moves too fast however, no connection can be found and the Object can not be successfully linked. The upper limit on how fast an object can move before it can no longer be detected depends on the object's size, distance to the sensors and the program’s cycle-time and can therefore not be exactly determined.
 
