@@ -14,11 +14,11 @@ This program is used for the two optimisation Methods for the DBSCAN parameters.
 For more information on the basic funcitons refer to the main program file.
 """
 
-# Optimisation program parameters
-COLLECTION_DURATION_T = 30 # Defines the runtime of the data-collection in seconds.
-NUM_FRAMES_N = 10 Defines how many frames are collected during the runtime.
+# Data Collection Parameters
+COLLECTION_DURATION_T = 30 # Runtime of the data-collection in seconds.
+NUM_FRAMES_N = 10 # Amount of frames collected during COLLECTION_DURATION_T
 
-# Other parameters, refer to the main program for more information.
+# Config (refer to main.py for more infos about the parameters)
 VOXEL_GRID_SIZE = 50.0
 WORK_ENVIRONMENT_SIZE = np.array([1500, 1400, 1600])
 VOXEL_MATRIX_SHAPE = (WORK_ENVIRONMENT_SIZE / VOXEL_GRID_SIZE).astype(int)
