@@ -18,6 +18,7 @@ VOXEL_MATRIX_SHAPE = (WORK_ENV_SIZE / VOXEL_GRID_SIZE).astype(int)
 TIME_TOLERANCE = 1.0
 STATIC_HIT_THRESHOLD = 100 
 COM_PORT = 'COM3' # may vary
+SENSORS_ON_RING = 7
 
 start_time = time.time()
 
@@ -76,7 +77,6 @@ def add_measurement(measured_real_coords, timestamp):
                 static_voxel_matrix[coord_tuple] += 1
 
 def process_sensor_data(json_input, current_time, serial_conn):
-    SENSORS_ON_RING = 7
     try:
         data = json.loads(json_input)
     except json.JSONDecodeError:
@@ -106,7 +106,7 @@ def process_sensor_data(json_input, current_time, serial_conn):
         
         i, j = np.meshgrid(np.arange(SENSOR_MATRIX_WIDTH), np.arange(SENSOR_MATRIX_WIDTH), indexing='ij')
         
-        # Calculate local coordinates based on ToF sensor FOV logic
+        # Local coordinates based on ToF sensor FOV logic
         coords_x = np.tan(np.radians(60.0 / 7.0 * i - 30.0)) * dist_matrix
         coords_y = dist_matrix
         coords_z = np.tan(np.radians(30.0 - 60.0 / 7.0 * j)) * dist_matrix
@@ -242,4 +242,5 @@ def run_optimization():
         print(f"  min_samples = {best_params['min_samples']}")
 
 if __name__ == "__main__":
+
     run_optimization()
