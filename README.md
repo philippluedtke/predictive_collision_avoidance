@@ -1,3 +1,5 @@
+<img width="1557" height="378" alt="image" src="https://github.com/user-attachments/assets/86b68f42-b4f6-442b-9455-460e621063f3" />
+
 # About the Project
 
 Objective of the project is the development of a reactive collision avoidance system for a colloborative robot.
