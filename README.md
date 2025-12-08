@@ -121,33 +121,3 @@ DBSCAN causes spatially distant points to be grouped together when used in envir
 The K distance plot is a widely used diagnostic tool for selecting the epsilon parameter for density-based clustering algorithms such as DBSCAN. For voxel-based point clouds the plot conveys not only a scale for neighborhood density but also signatures of the underlying grid structure.
 The elbow point is the location of maximal curvature in the K distance curve. In practice it is the point where the plotted distances change from a relatively flat trend to a markedly increasing slope. Geometrically this point separates points that reside in dense local neighborhoods from points that are isolated or belong to sparse clusters. The vertical coordinate at the elbow is commonly chosen as the epsilon value for DBSCAN. Intuitively, points that appear before the elbow have small distance to their k nearest neighbor and therefore belong to dense cluster interiors. Points that appear after the elbow have substantially larger k distance and are likely to be noise or members of very sparse clusters. Setting epsilon to the elbow value implements the decision rule: every point whose k distance is smaller than epsilon is considered part of a cluster while points with larger k distance are treated as noise. Points inside clusters tend to have many nearby neighbors so their k distance stays small and the curve is flat. When the curve reaches the elbow the population of points transitions from cluster interior to boundary or to background. This transition produces the characteristic knee shape that guides epsilon selection.
 Voxelized point clouds are defined on a discrete integer grid. Distances between voxel centers are computed with the Euclidean norm d=√(Δx^2+Δy^2+Δz^2) where each delta is an integer difference between voxel coordinates. Because the coordinate differences are integers the set of possible distance values is discrete and limited. When the k distance values for all points are sorted, many points frequently share identical or nearly identical distance values. This results in extended horizontal segments in the sorted curve. Each flat segment corresponds to a bin of identical distance values produced by the grid geometry. When the next larger discrete distance appears the curve jumps to the next step. The more regular the grid and the coarser the voxel resolution the stronger the staircase effect. The staircase appearance is not a flaw but an artifact of discretization. It implies that small changes to epsilon within a flat segment will not change cluster assignments. Conversely, choosing epsilon values at jump points will change the number of neighbors for many points at once and may cause abrupt changes in the clustering outcome. In practice it is therefore advisable to choose epsilon near the top of a stable flat segment immediately before a jump, or to use algorithms that estimate the elbow by curvature rather than by manual inspection.
-
-
-
-
-# Sources, links and literature:
-  # Repo
-    https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver?utm_source=chatgpt.com (Universal_Robots_ROS2_Driver)
-    https://github.com/isl-org/Open3D (Open 3D)
-    https://github.com/PointCloudLibrary/pcl (Point Cloud Libary)
-    https://github.com/yanx27/Pointnet_Pointnet2_pytorch (PointNet ++, PointNeXT was extreacted)
-    https://github.com/facebookresearch/votenet (Deep Hough Voting for 3D Object Detection in Point Clouds)
-    https://github.com/seung-lab/connected-components-3d (connected-components-3d)
-
-  # Data Sets
-    https://github.com/ScanNet/ScanNet (VoteNet was trained on this data)
-
-  # Papers
-    https://arxiv.org/pdf/2208.07678 (FEC: Fast Euclidean Clustering for Point Cloud Segmentation)
-    https://arxiv.org/pdf/2412.04649 (Generating Whole-Body Avoidance Motion through Localized Proximity Sensing)
-    https://www.vision.rwth-aachen.de/media/papers/know-what-your-neighbors-do-3d-semantic-segmentation-of-point-clouds/W63P26.pdf (Know What Your Neighbors Do: 3D Semantic     Segmentation of Point Clouds)
-    https://arxiv.org/pdf/2405.11903 (A comprehensive overview of deep learning techniques for 3D point cloud classification and semantic segmentation)
-    https://arxiv.org/pdf/1812.05784 (PointPillars: Fast Encoders for Object Detection from Point Clouds)
-    https://openlib.tugraz.at/download.php?id=5f6b335524db8&location=browse&utm_source=chatgpt.com (360° Monitoring for Robots Using Time-of-Flight Sensors)
-    https://biorobotics.ri.cmu.edu/papers/paperUploads/Abah_Multi-modal_2019.pdf (A Multi-modal Sensor Array for Safe Human-Robot Interaction and Mapping)
-    https://arxiv.org/pdf/1904.09664 (Deep Hough Voting for 3D Object Detection in Point Clouds)
-    https://arxiv.org/pdf/2308.11166 (Hierarchical Point-based Active Learning for Semi-supervised Point Cloud Semantic Segmentation)
-
-  # Other Formats
-    https://medium.com/@BasicAI-Inc/3d-point-cloud-segmentation-guide-a073b4a6b5f3 (Introduction to 3D Point Cloud Segmentation)
-    https://forum.universal-robots.com/t/eye-in-hand-camera-calibration/35922?utm_source=chatgpt.com (Eye-in-hand camera calibration)
