@@ -22,7 +22,8 @@ Industry 5.0 signifies a pivotal realignment of industrial priorities, emphasisi
 [5] § 154 SGB IX - Einzelnorm
 _________________________________________________________________________________________
 
-# The Code
+# The Code#
+This program has been tested  #req.text#
 
 "30_7_pico_serial_connection.ino" can be used for the pico. All programs with the "json"-token however use a different method to the used with the sensor ring.
 
