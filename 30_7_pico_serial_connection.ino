@@ -1,3 +1,7 @@
+"""
+**FYI**: "30_7_pico_serial_connection.ino" can be used for the pico. However, all programs with the JSON token use a different method than the one used with the sensor ring.
+"""
+ 
 #include <Wire.h>
 #include <vl53l7ch.h>
  
