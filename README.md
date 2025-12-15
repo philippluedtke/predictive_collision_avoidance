@@ -1,9 +1,8 @@
 <img width="1557" height="378" alt="image" src="https://github.com/user-attachments/assets/86b68f42-b4f6-442b-9455-460e621063f3" />
 
-# About the Project
+# Abstract
 
-Objective of the project is the development of a reactive collision avoidance system for a colloborative robot.
-
+The paradigm shift toward Industry 5.0 requires a fundamental change in human-robot collaboration. This change involves transitioning from reactive collision detection to proactive, human-centric safety frameworks. Although extrinsic sensing systems and resource-intensive AI-based perception and decision-making pipelines provide rich environmental context in complex scenarios, occlusion and significant processing latencies. This research addresses these challenges by presenting a low-latency, intrinsic, 3D motion tracking system that uses a Time-of-Flight sensor ring mounted directly on a Cobot link. The core contribution is a data processing pipeline integrating a hysteresis-based temporal occupancy filter that eliminates ghosting artifacts and spatial merging. Exploiting the discrete topology of super-sparse voxel grids, we derive an optimized DBSCAN clustering configuration that ensures feature continuity while maintaining real-time performance. This approach minimizes geometric detail to the level strictly necessary for robust tracking, thereby maximizing computational performance. Experimental validation in high-proximity scenarios, including human-to-human interactions, demonstrates stable tracking at internal frequencies of 14--16\,Hz. The findings confirm that combining low-cost onboard sensing with a zero-shot sparse voxel pipeline yields predictable trajectories for collision avoidance, thus facilitating the inclusivity and safety requirements of modern industrial code.
 # Introduction
 
 # Relevance in Industry and Academia
@@ -11,15 +10,7 @@ Objective of the project is the development of a reactive collision avoidance sy
 Industry 5.0 signifies a pivotal realignment of industrial priorities, emphasising human-centric collaboration, sustainability, and resilience rather than the pursuit of automation for its own value [1] Building on the digital and cyber-physical foundations of previous industrial advancements, Industry 5.0 employs technologies such as the industrial Internet of Things (IoT), artificial intelligence (AI), digital twins, industrial robots and additive manufacturing to facilitate smart factories, while redefining technological progress as a means to empower human workers and reduce environmental impact [2]. The focus of Industry 4.0 was predominantly on efficiency and connectivity, which gave rise to concerns regarding job security, rising unemployment due to automation, and environmental issues such as excessive energy consumption and electronic waste. Industry 5.0 aims to address these social and ecological gaps by augmenting human capabilities through collaborative machine systems, as opposed to replacing them. Collaborative robots (CoBot) are designed to undertake repetitive or hazardous tasks, thereby allowing human operators to focus on more complex activities such as oversight, problem solving and value-adding operations [1]. This shift presents a range of practical opportunities, including mass customisation, greater production flexibility, optimised resource use, and the inclusion of disabled people in the workforce. These opportunities can help to meet growing consumer demand for personalised products while lowering material and energy footprints [2]. Simultaneously, the increased proximity of humans and machines gives rise to new and significant safety challenges. These challenges require robust technical solutions and regulatory guidance to ensure worker protection under all conditions [4]. In practice, common safety systems such as torque sensors provide reliable collision detection and force control. However, they only signal after an impact has occurred. This means that complementary approaches, such as proximity sensing, offer promising opportunities for achieving anticipatory protection and facilitating smoother and safer human-robot interaction [4]. From an occupational health and safety perspective, human-centred collaboration has been shown to reduce musculoskeletal risk factors, decrease physical effort, improve coordination and efficiency, and lower exposure to hazards. Some experimental studies also report fewer errors per unit of time and maintained trust in cobotic systems, even when total error counts remain similar across conditions [4]. The societal relevance of human-centred manufacturing is reinforced by legal frameworks such as the § 154 of the German Social Code Book IX that promote inclusion and reasonable accommodations for severely disabled employees. This ensures that industrial practice aligns with broader goals of social participation and equity [5]. ...
 
 
-[1] From automation to collaboration: exploring the impact of industry 5.0 on sustainable manufacturing | Discover Sustainability
 
-[2] Industry 5.0 - Publications Office of the EU and Industry 5.0 - Research and innovation - European Commission
-
-[3] (PDF) Adaptive Obstacle Avoidance for a Class of Collaborative Robots
-
-[4] Human-Cobot collaboration's impact on success, time completion, errors, workload, gestures and acceptability during an assembly task
-
-[5] § 154 SGB IX - Einzelnorm
 _________________________________________________________________________________________
 
 # The Code#
