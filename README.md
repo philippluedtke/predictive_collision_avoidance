@@ -26,7 +26,7 @@ The pipline was tested on the follwoing systems configuration:
 All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the **req.txt** above. Install dependencies with:
 ```bash
 pip install -r req.txt
-
+```
 
 # Conclusion
 In this paper, a novel, low-cost intrinsic sensing system is presented. This system is designed to address the limitations of reactive force and predictive collision avoidance in Industry 5.0 environments. By integrating a multi-sensor ToF array with a high-performance temporal voxel pipeline, the potential for real-time object tracking within super-sparse data structures has been demonstrated. The methodology applied for temporal occupancy filtering effectively resolves the chronic issues of ghosting and spatial merging that typically plague density-based clustering in discretized spaces. Moreover, the integration of a topologically-grounded hyperparameter selection for DBSCAN offers a robust theoretical foundation for the development of future low-latency HRC applications. While the system demonstrated a high degree of correlation with ground-truth movements and displayed robustness in close-proximity interactions, critical limitations were identified with regard to sensitivity and low-profile geometric detection (d < 2cm). Consequently, future work will concentrate on integrating adaptive background subtraction to accommodate semi-static environments and developing a global optimization framework for hyperparameters to ensure cross-platform scalability. This research offers a foundation for cobotic workspaces that are safer, more resilient, and inclusive. It aligns technological advancement with the human-centric priorities of the primary labor market.
