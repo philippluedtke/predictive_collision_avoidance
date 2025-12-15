@@ -12,7 +12,8 @@ From an occupational health and safety perspective, human-robot collaboration (H
 
 By effectively lowering physical barriers to enter the primary labor market, these ergonomic benefits lay the foundation for a more inclusive workforce. Beyond the individual health benefits, the ability to serve diverse physical impairments fosters compliance with legal frameworks. For example, § 154 of the German Social Code Book IX [6] promotes inclusion and reasonable accommodations for severely disabled employees. To ensure that the previously mentioned objectives of I 5.0 are aligned with the general goals of social participation and equity, the implementation of Cobots must be realized in a manner that is both safe and anticipatory. A critical and first step for ensuring safety by collision avoidance in HRC is the ability to reliably detect objects real-time in proximity.
 
-# Hardware
+# System Configuration
+## Hardware
 <img width="630" height="247" alt="hardware_description" src="https://github.com/user-attachments/assets/da702bbd-f703-4d4e-9fb8-18650d2b6dec" />
 
 The pipline was tested on the follwoing systems configuration:
@@ -21,7 +22,8 @@ The pipline was tested on the follwoing systems configuration:
 - Cobot: Universal Robot UR10e
 - Mounting Device: 3D printed single ring for 7 sensors
 
-All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the req.txt above.
+## Software
+All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the **req.txt** above.
 
 
 # Conclusion
