@@ -23,7 +23,7 @@ The pipline was tested on the follwoing systems configuration:
 - Mounting Device: 3D printed single ring for 7 sensors
 
 ## Software
-All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the **req.txt** above. Install dependencies with:
+All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the **req.txt** above. First, clone the repository and install the dependencies with:
 ```bash
 pip install -r req.txt
 ```
