@@ -27,18 +27,8 @@ All experiments were conducted using Python 3.12.6 on Windows 11.The exact packa
 ```bash
 pip install -r req.txt
 ```
-
-# Conclusion
-In this paper, a novel, low-cost intrinsic sensing system is presented. This system is designed to address the limitations of reactive force and predictive collision avoidance in Industry 5.0 environments. By integrating a multi-sensor ToF array with a high-performance temporal voxel pipeline, the potential for real-time object tracking within super-sparse data structures has been demonstrated. The methodology applied for temporal occupancy filtering effectively resolves the chronic issues of ghosting and spatial merging that typically plague density-based clustering in discretized spaces. Moreover, the integration of a topologically-grounded hyperparameter selection for DBSCAN offers a robust theoretical foundation for the development of future low-latency HRC applications. While the system demonstrated a high degree of correlation with ground-truth movements and displayed robustness in close-proximity interactions, critical limitations were identified with regard to sensitivity and low-profile geometric detection (d < 2cm). Consequently, future work will concentrate on integrating adaptive background subtraction to accommodate semi-static environments and developing a global optimization framework for hyperparameters to ensure cross-platform scalability. This research offers a foundation for cobotic workspaces that are safer, more resilient, and inclusive. It aligns technological advancement with the human-centric priorities of the primary labor market.
-
-**More detailed information can be found in the uploaded paper in this repository**
-
 # The Code
-##
-
-
-
-# How the Program is structured
+## How the Program is structured
 
 The program can be structured by these steps:
 1. Collection of the Sensor-data (which is not a part of this project).
@@ -53,7 +43,7 @@ The program can be structured by these steps:
 
 Diagram showing the parts of the program. The Orange boxes represent the different storages.
 
-# About the final Program:
+## About the final Program:
 
 The problem of latency was largely resolved by using the voxel approach. The Raspberry Pi Pico used produced the sensor data at approximately 8.33 Hz. The main Program needed approximately 60 to 70 ms to complete one cycle (which includes data-gathering and all following steps) which was also tested with larger sample sizes from up to 7 sensors.
 
@@ -76,7 +66,7 @@ Another problem stems from the inherent uncertainty of the voxel-solution. The f
 
 Datasheet - VL53L7CX - Time-of-Flight 8x8 multizone ranging sensor with 90° FoV: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 
-# Results from testing with the real sensor-ring:
+## Results from testing with the real sensor-ring:
 
 Real-life testing revealed many coding and design-flaws of the approach. Although the program handled the increased data given by 6 additional sensor quite good with cycle-times of 85 to 65ms, the main concern were significant problems with the detection and especially the distinction of the different objects. These problems were primarily adressde by adjusting the parameters, particularly the epsilon of the DBSCAN (meaning the distance at which two voxels are merged). A major cause for errors were the static surroundings, which often grouped together with nearby moving objects or merged and then unmerged with other static objects, both resulting in motion errors.This could only be partially adressed by adjusting the DBSCAN parameters. Because of this a significant adjustment was introduced by scanning for static objects before starting the main program as part of a preparation function. It is then assumed that these static voxels are not relevant for the object-detection. This way, the program is able to reduce the merging errors considerably, but the process used to identify the static objects is still not completely certain or fully developed. 
 
@@ -94,14 +84,14 @@ The parameters used in the program were adjusted empirically. For the DBSCAN-par
 
 Here, the results of the value-finding algorithm can be seen.
 
-# Current limitations of the Program:
+## Current limitations of the Program:
 Fundamentally there are two forms of limitatiosn for the final program: Theoretical limitations which stem from the way the program works and real life limitations which mainly come from uncertanties of the sensors.
 
 The most critical limitation is the size of objects which can be detected, which is variable and dependent on distance from the sensors, movement speed and material (reflective or translucent meterials cannot be detected) of the object. Testing revealed that rods with a diameter of around 2cm can only be detected directly in front of the sensor ring while objects with a diameter larger than 5cm (a human arm for example) can be deteced at a distance greater than 100cm. Objects which are moving can generally be detected better, as they can often be seen by more sensors, although it's difficult to get precise thresholds for this phenomenon, as it again also depends on the distance to the sensors.
 
 The theoretical limitations were already addressed previously, but the main problems are the difficulties regarding DBSCAN, the detection of movement speeds with variable maximal and minimal speeds, the necessary detection of stationary objects and the sometimes erratic detected motion vectors.
 
-# Current Problem wit DBSCAN in ToF pointcloud setting 
+## Current Problem wit DBSCAN in ToF pointcloud setting 
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces the ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that the sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBSCAN. This also allows for more empirical parameter optimisation of the DBSCAN parameter.
 
 <img width="393" height="354" alt="image" src="https://github.com/user-attachments/assets/c5979157-686d-4345-ac55-d566bf698aa9" />
@@ -111,17 +101,23 @@ DBSCAN causes spatially distant points to be grouped together when used in envir
 <img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/b45a1278-5f81-46cc-9527-4ffe1cd3aa28" />
 <img width="411" height="296" alt="image" src="https://github.com/user-attachments/assets/03be48fd-0709-4abd-b1e1-a4671e010b15" />
 
-# Limitations
+## Limitations
 - Objectsize depedent on sensor hardware (density of voxels)
 - paramater optimization empirically done
 - max and min velocities -> from object detection and
 - two groups limitation:
 - sensor fluctuation -> problems
 
-# Solve DBSCAN Algorithms by tuning its hyper parameters
+## Solve DBSCAN Algorithms by tuning its hyper parameters
 <img width="820" height="422" alt="image" src="https://github.com/user-attachments/assets/e311e7a7-2d18-4d4c-a943-2c5a3fc78bee" />
 <img width="727" height="388" alt="image" src="https://github.com/user-attachments/assets/33adcf63-9ce8-4e99-9190-8fb2fd0dd61e" />
 
 The K distance plot is a widely used diagnostic tool for selecting the epsilon parameter for density-based clustering algorithms such as DBSCAN. For voxel-based point clouds the plot conveys not only a scale for neighborhood density but also signatures of the underlying grid structure.
 The elbow point is the location of maximal curvature in the K distance curve. In practice it is the point where the plotted distances change from a relatively flat trend to a markedly increasing slope. Geometrically this point separates points that reside in dense local neighborhoods from points that are isolated or belong to sparse clusters. The vertical coordinate at the elbow is commonly chosen as the epsilon value for DBSCAN. Intuitively, points that appear before the elbow have small distance to their k nearest neighbor and therefore belong to dense cluster interiors. Points that appear after the elbow have substantially larger k distance and are likely to be noise or members of very sparse clusters. Setting epsilon to the elbow value implements the decision rule: every point whose k distance is smaller than epsilon is considered part of a cluster while points with larger k distance are treated as noise. Points inside clusters tend to have many nearby neighbors so their k distance stays small and the curve is flat. When the curve reaches the elbow the population of points transitions from cluster interior to boundary or to background. This transition produces the characteristic knee shape that guides epsilon selection.
 Voxelized point clouds are defined on a discrete integer grid. Distances between voxel centers are computed with the Euclidean norm d=√(Δx^2+Δy^2+Δz^2) where each delta is an integer difference between voxel coordinates. Because the coordinate differences are integers the set of possible distance values is discrete and limited. When the k distance values for all points are sorted, many points frequently share identical or nearly identical distance values. This results in extended horizontal segments in the sorted curve. Each flat segment corresponds to a bin of identical distance values produced by the grid geometry. When the next larger discrete distance appears the curve jumps to the next step. The more regular the grid and the coarser the voxel resolution the stronger the staircase effect. The staircase appearance is not a flaw but an artifact of discretization. It implies that small changes to epsilon within a flat segment will not change cluster assignments. Conversely, choosing epsilon values at jump points will change the number of neighbors for many points at once and may cause abrupt changes in the clustering outcome. In practice it is therefore advisable to choose epsilon near the top of a stable flat segment immediately before a jump, or to use algorithms that estimate the elbow by curvature rather than by manual inspection.
+
+# Conclusion
+In this paper, a novel, low-cost intrinsic sensing system is presented. This system is designed to address the limitations of reactive force and predictive collision avoidance in Industry 5.0 environments. By integrating a multi-sensor ToF array with a high-performance temporal voxel pipeline, the potential for real-time object tracking within super-sparse data structures has been demonstrated. The methodology applied for temporal occupancy filtering effectively resolves the chronic issues of ghosting and spatial merging that typically plague density-based clustering in discretized spaces. Moreover, the integration of a topologically-grounded hyperparameter selection for DBSCAN offers a robust theoretical foundation for the development of future low-latency HRC applications. While the system demonstrated a high degree of correlation with ground-truth movements and displayed robustness in close-proximity interactions, critical limitations were identified with regard to sensitivity and low-profile geometric detection (d < 2cm). Consequently, future work will concentrate on integrating adaptive background subtraction to accommodate semi-static environments and developing a global optimization framework for hyperparameters to ensure cross-platform scalability. This research offers a foundation for cobotic workspaces that are safer, more resilient, and inclusive. It aligns technological advancement with the human-centric priorities of the primary labor market.
+
+**More detailed information can be found in the uploaded paper in this repository**
+
