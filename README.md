@@ -94,7 +94,6 @@ The theoretical limitations were already addressed previously, but the main prob
 ## Prelimenary Merging Problem of DBSCAN
 <img width="1552" height="1112" alt="image" src="https://github.com/user-attachments/assets/eaf68933-bc64-4b89-ab47-010922165e99" />
 
-
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces the ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that the sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBSCAN. This also allows for more empirical parameter optimisation of the DBSCAN parameter.
 
 # Conclusion
