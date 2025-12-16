@@ -32,7 +32,7 @@ pip install -r req.txt
 ## How the Program is structured
 <img width="320" height="451" alt="image" src="https://github.com/user-attachments/assets/22564d95-09b0-4a0e-aebf-7146b180f9cc" />
 
-(Orange boxes represent different storage
+(Orange boxes represent different storage)
 
 The program can be structured by these steps:
 1. Collection of the Sensor-data (which is not a part of this project).
@@ -43,7 +43,7 @@ The program can be structured by these steps:
 6. Afte the movement vectors has been worked out they can be used to predict the next movement. For this, the Progam only uses a very rudimentary algorithm but it could also track the whole history of detected movement vectors, making it possible to use more complex programs to analyse the movement, but this would exceed the scope of this project.
 7. Lastly an output is given. The determined movement-vector is shown including the approximate position of the related object.
 
-## About the final Program:
+## About the Final Program:
 The problem of latency was largely resolved by using the voxel approach. The Raspberry Pi Pico used produced the sensor data at approximately 8.33 Hz. The main Program needed approximately 60 to 70 ms to complete one cycle (which includes data-gathering and all following steps) which was also tested with larger sample sizes from up to 7 sensors.
 
 Experiments with classic boolean-based voxels as well as a time-based approach were carried out. The main advantages of the boolean method are theoretically better performance, although this could not be demonstrated in real-time testing, and the possibility of better movement reconstruction, meaning the ability to trace back the movement further back in time as it would be possible using the time based method as each timeframe is separately recorded. The advantages of the time based method are a more consistent tracking, more adjustability in form of the TIME_TOLERANCE parameter and the enhanced expandability for possible other sensor rings as there are no time-frames but a more fluid memorization of the received sensor data. The TIME_TOLERANCE parameter is critical in discretising the time-frames and is further discussed later. The final program makes use of the time based approach.
@@ -94,10 +94,11 @@ The theoretical limitations were already addressed previously, but the main prob
 ## Prelimenary Merging Problem of DBSCAN
 <img width="1552" height="1112" alt="image" src="https://github.com/user-attachments/assets/eaf68933-bc64-4b89-ab47-010922165e99" />
 
+
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces the ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that the sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBSCAN. This also allows for more empirical parameter optimisation of the DBSCAN parameter.
 
 # Conclusion
 In this paper, a novel, low-cost intrinsic sensing system is presented. This system is designed to address the limitations of reactive force and predictive collision avoidance in Industry 5.0 environments. By integrating a multi-sensor ToF array with a high-performance temporal voxel pipeline, the potential for real-time object tracking within super-sparse data structures has been demonstrated. The methodology applied for temporal occupancy filtering effectively resolves the chronic issues of ghosting and spatial merging that typically plague density-based clustering in discretized spaces. Moreover, the integration of a topologically-grounded hyperparameter selection for DBSCAN offers a robust theoretical foundation for the development of future low-latency HRC applications. While the system demonstrated a high degree of correlation with ground-truth movements and displayed robustness in close-proximity interactions, critical limitations were identified with regard to sensitivity and low-profile geometric detection (d < 2cm). Consequently, future work will concentrate on integrating adaptive background subtraction to accommodate semi-static environments and developing a global optimization framework for hyperparameters to ensure cross-platform scalability. This research offers a foundation for cobotic workspaces that are safer, more resilient, and inclusive. It aligns technological advancement with the human-centric priorities of the primary labor market.
 
-**More detailed information can be found in the uploaded paper in this repository**
+**More detailed information can be found in the uploaded documentation folder in this repository. There you will find a paper as well as the project presentation slides**
 
