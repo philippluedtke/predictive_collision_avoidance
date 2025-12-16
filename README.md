@@ -5,11 +5,8 @@ The paradigm shift toward Industry 5.0 requires a fundamental change in human-ro
 
 # Introduction
 Industry 5.0 (I 5.0) signifies a pivotal realignment of industrial priorities, emphasizing human-centric collaboration, sustainability, and resilience rather than the pursuit of automation for its own merit [1]. It builds on the digital and cyber-physical foundations of previous industrial advancements, particularly Industry 4.0 (I 4.0). I 5.0 utilizes technologies such as Internet of Things (IoT), artificial intelligence (AI), digital twins, industrial robots and additive manufacturing to facilitate smart factories, while redefining technological progress as a mean to empower human workers and reduce environmental impact [2]. The focus of I 4.0 was predominantly on efficiency and connectivity, which gave rise to concerns regarding job security, rising unemployment due to automation, and environmental issues such as excessive energy consumption and electronic waste [1]. I 5.0 therefore aims to address these social and ecological challenges by leveraging human capabilities through collaborative machine systems, as opposed to replacing them [2].
-
 Collaborative robots (Cobot) are designed to undertake repetitive or hazardous tasks in contact-rich environments, thereby allowing human operators to focus on more complex activities such as oversight, problem solving or in general operations that add greater value [1]. This shift presents a range of practical opportunities, including mass customization, greater production flexibility, optimized resource use, and the inclusion of disabled people in the workforce. These opportunities can further help to meet growing consumer demand for personalized products while lowering material and energy footprints [2]. Simultaneously, the increased proximity of humans and machines gives rise to new and significant safety challenges. These challenges require robust, easy-to-handle technical solutions as well as regulatory guidance to ensure worker protection under all conditions [4]. In practice, common safety systems mostly rely on compliance control and collision detection [5] such as torque sensors in order to provide reliable collision detection and force control. However, they only signal after an impact has occurred. Complementary approaches such as proximity sensing offer promising opportunities for achieving predictive protection and facilitating smoother and safer human-robot interaction (HRI) [4].
-
 From an occupational health and safety perspective, human-robot collaboration (HRC) has been shown to reduce (musculoskeletal) health risk factors, decrease physical effort, improve coordination and efficiency as well as lower exposure to hazards [4]. The study from Fournier et al. [4] also reports fewer errors per unit of time and maintained trust in cobotic systems, even when total error counts remain similar across setups.
-
 By effectively lowering physical barriers to enter the primary labor market, these ergonomic benefits lay the foundation for a more inclusive workforce. Beyond the individual health benefits, the ability to serve diverse physical impairments fosters compliance with legal frameworks. For example, § 154 of the German Social Code Book IX [6] promotes inclusion and reasonable accommodations for severely disabled employees. To ensure that the previously mentioned objectives of I 5.0 are aligned with the general goals of social participation and equity, the implementation of Cobots must be realized in a manner that is both safe and anticipatory. A critical and first step for ensuring safety by collision avoidance in HRC is the ability to reliably detect objects real-time in proximity.
 
 # System Configuration
@@ -17,10 +14,10 @@ By effectively lowering physical barriers to enter the primary labor market, the
 <img width="630" height="247" alt="hardware_description" src="https://github.com/user-attachments/assets/da702bbd-f703-4d4e-9fb8-18650d2b6dec" />
 
 The pipline was tested on the follwoing systems configuration:
-- Microcontroller: Raspberry Pi Pico RP2040
-- Time-of-Flight Sensor: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV)
-- Cobot: Universal Robot UR10e
-- Mounting Device: 3D printed single ring for 7 sensors
+- **Microcontroller**: Raspberry Pi Pico RP2040
+- **Time-of-Flight Sensor**: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV)
+- **Cobot**: Universal Robot UR10e
+- **Mounting Device**: 3D printed single ring for 7 sensors
 
 ## Software
 All experiments were conducted using Python 3.12.6 on Windows 11.The exact package versions are provided in the **req.txt** above. First, clone the repository and install the dependencies with:
@@ -29,7 +26,6 @@ pip install -r req.txt
 ```
 # The Code
 ## How the Program is structured
-
 The program can be structured by these steps:
 1. Collection of the Sensor-data (which is not a part of this project).
 2. Storage of the collected data. There are exact (point-cloud) and discrete (voxels) options. The exact options have less built-in error, but the discrete options offer far better performance which is critical when dealing with object or motion detection. Therefore, voxels are the best option. As the objective is not only to detect objects but also the movement of these objects it is necessary to track these objects over time. There several options: Each timeframe could be stored as a different grid or all points could be stored in the same grid where the voxels themselves hold the needed information. The first option gives a history of all received data, but the management can become difficult and runs the risk of Memory Errors. The second option restricts the size of the stored data significantly, again trading performance for exactness.
@@ -44,7 +40,6 @@ The program can be structured by these steps:
 Diagram showing the parts of the program. The Orange boxes represent the different storages.
 
 ## About the final Program:
-
 The problem of latency was largely resolved by using the voxel approach. The Raspberry Pi Pico used produced the sensor data at approximately 8.33 Hz. The main Program needed approximately 60 to 70 ms to complete one cycle (which includes data-gathering and all following steps) which was also tested with larger sample sizes from up to 7 sensors.
 
 Experiments with classic boolean-based voxels as well as a time-based approach were carried out. The main advantages of the boolean method are theoretically better performance, although this could not be demonstrated in real-time testing, and the possibility of better movement reconstruction, meaning the ability to trace back the movement further back in time as it would be possible using the time based method as each timeframe is separately recorded. The advantages of the time based method are a more consistent tracking, more adjustability in form of the TIME_TOLERANCE parameter and the enhanced expandability for possible other sensor rings as there are no time-frames but a more fluid memorization of the received sensor data. The TIME_TOLERANCE parameter is critical in discretising the time-frames and is further discussed later. The final program makes use of the time based approach.
