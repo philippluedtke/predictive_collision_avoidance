@@ -32,7 +32,7 @@ pip install -r req.txt
 ## How the Program is structured
 <img width="320" height="451" alt="image" src="https://github.com/user-attachments/assets/22564d95-09b0-4a0e-aebf-7146b180f9cc" />
 
-(Orange boxes represent different storage).
+(Orange boxes represent different storage
 
 The program can be structured by these steps:
 1. Collection of the Sensor-data (which is not a part of this project).
