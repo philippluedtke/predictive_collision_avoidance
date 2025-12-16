@@ -18,8 +18,7 @@ By effectively lowering physical barriers to enter the primary labor market, the
 
 The pipline was tested on the follwoing systems configuration:
 - **Microcontroller**: Raspberry Pi Pico RP2040
-- **Time-of-Flight Sensor**: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV)
-   **Datasheet**: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
+- **Time-of-Flight Sensor**: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV) | **Datasheet**: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 - **Cobot**: Universal Robot UR10e
 - **Mounting Device**: 3D printed single ring for 7 sensors
 
@@ -92,11 +91,8 @@ The most critical limitation is the size of objects which can be detected, which
 
 The theoretical limitations were already addressed previously, but the main problems are the difficulties regarding DBSCAN, the detection of movement speeds with variable maximal and minimal speeds, the necessary detection of stationary objects and the sometimes erratic detected motion vectors.
 
-## Prelimenary Problem wit DBSCAN in ToF pointcloud setting
-<img width="393" height="354" alt="image" src="https://github.com/user-attachments/assets/c5979157-686d-4345-ac55-d566bf698aa9" />
-<img width="393" height="354" alt="image" src="https://github.com/user-attachments/assets/c0869f06-7032-4156-a15e-cb78468e9871" />
-
-<img width="845" height="290" alt="image" src="https://github.com/user-attachments/assets/e558e123-24e0-4292-b36f-53a6fe7c86e5" />
+## Prelimenary Merging Problem of DBSCAN
+<img width="1552" height="1112" alt="image" src="https://github.com/user-attachments/assets/eaf68933-bc64-4b89-ab47-010922165e99" />
 
 DBSCAN causes spatially distant points to be grouped together when used in environments with a limited number of voxels. This effect stems from the algorithm relying on local neighborhood density and k nearest neighbors. Figure 1 clearly shows that the scanner initially detected a pool noodle as a separate object. However, when it came close to the wall, the scanner merged both into a single cluster. Merging reduces the ability to separate objects by distance and to detect novel items reliably and semantically. Additionally, initial tests revealed that the sensor ring produces false points, which introduce noise in a already sparse voxel representations. It is vital to handle static objects that interfere with the clustering. The solution is straightforward: save them beforehand so that those detected voxels are not taken into consideration for the DBSCAN. This also allows for more empirical parameter optimisation of the DBSCAN parameter.
 
