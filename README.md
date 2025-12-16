@@ -18,7 +18,8 @@ By effectively lowering physical barriers to enter the primary labor market, the
 
 The pipline was tested on the follwoing systems configuration:
 - **Microcontroller**: Raspberry Pi Pico RP2040
-- **Time-of-Flight Sensor**: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV) | **Datasheet**: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
+- **Time-of-Flight Sensor**: VL53L7CX  (8x8 multizone ranging sensor with 90° FoV)
+   **Datasheet**: https://www.st.com/resource/en/datasheet/vl53l7cx.pdf
 - **Cobot**: Universal Robot UR10e
 - **Mounting Device**: 3D printed single ring for 7 sensors
 
